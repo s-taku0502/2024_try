@@ -29,23 +29,21 @@ class QR_Scanner_Main : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         // QRコード読み取り結果
-        val qrCodeResult = "読み取った文字列"
+        if (resultCode == RESULT_OK && data != null) {
+            val qrCodeResult = data.getStringExtra("SCAN_RESULT") ?: "読み取った文字列"
 
-// Intent に QRコード読み取り結果を格納
-        val intent = Intent(this, StampsFragment::class.java)
-        intent.putExtra("qrCodeResult", qrCodeResult)
+            // StampsFragment に渡すためのバンドルを作成
+            val bundle = Bundle()
+            bundle.putString("qrCodeResult", qrCodeResult)
 
-// StampsFragment を起動
-        startActivity(intent)
+            // StampsFragment のインスタンスを作成してバンドルを設定
+            val stampsFragment = StampsFragment()
+            stampsFragment.arguments = bundle
+
+            // FragmentTransaction を使って StampsFragment を表示
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.stampContainer, stampsFragment) // レイアウト内の適切なコンテナに置き換え
+                .commit()
+        }
     }
-
-
-    /*
-    // StampsFragmentにスタンプを追加するメソッド
-    private fun addStampToStampsPage(stampName: String) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.stampContainer) as? StampsFragment
-        fragment?.addStamp(stampName)
-        addStampToStampsPage("aiueo")
-    }
-     */
 }
