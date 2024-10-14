@@ -1,85 +1,53 @@
 package com.example.nuka2024_try.ui.stores
 
 import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
-import com.example.nuka2024_try.R
 import android.os.Handler
 import android.os.Looper
-import android.view.MotionEvent
-import android.widget.FrameLayout
-import android.widget.ImageSwitcher
-import android.widget.ImageView
-import java.util.Timer
-import java.util.TimerTask
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
+import com.example.nuka2024_try.R
 
-// グローバル変数
-private var currentImageIndex = 0
-private val images = arrayOf(
-    R.drawable.icon,
-    R.drawable.app_icon,
-    R.drawable.nav_icon_stamp
-)
+class StoresFragment : Fragment() {
 
-private var timer: Timer? = null
-private val handler = Handler(Looper.getMainLooper())
+    private lateinit var viewPager: ViewPager2
+    private val imageList = listOf(
+        R.drawable.icon,  // 画像リソースを設定
+        R.drawable.nav_icon_stamp,
+        R.drawable.circle_app_icon
+    )
 
-class StampFragment : Fragment(R.layout.fragment_stores) {
-
-    // ImageSwitcherをクラス内で保持するためにlateinitを使用
-    private lateinit var imageSwitcher: ImageSwitcher
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // fragment_stores.xml を膨らませる
+        return inflater.inflate(R.layout.fragment_stores, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // view.findViewByIdでImageSwitcherを取得
-        imageSwitcher = view.findViewById(R.id.icon_01)
+        viewPager = view.findViewById(R.id.viewPager)
+        val adapter = ImageSliderAdapter(imageList)
+        viewPager.adapter = adapter
 
-        // ImageSwitcherにImageViewを設定
-        imageSwitcher.setFactory {
-            ImageView(requireContext()).apply {
-                layoutParams = FrameLayout.LayoutParams(150, 150)
-                scaleType = ImageView.ScaleType.FIT_CENTER
-            }
-        }
-
-        // 初期画像を設定
-        imageSwitcher.setImageResource(images[currentImageIndex])
-
-        // マウスオーバー時の処理
-        imageSwitcher.setOnHoverListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_HOVER_ENTER -> {
-                    startImageSwitching() // 画像の切り替えを開始
-                }
-                MotionEvent.ACTION_HOVER_EXIT -> {
-                    stopImageSwitching() // 画像の切り替えを停止
-                }
-            }
-            true
-        }
+        // 自動スライド機能
+        autoSlideImages()
     }
 
-    // 画像を3秒ごとに切り替える関数
-    private fun startImageSwitching() {
-        // タイマーが既に動いている場合は何もしない
-        if (timer != null) return
-
-        timer = Timer()
-        timer?.scheduleAtFixedRate(object : TimerTask() {
+    private fun autoSlideImages() {
+        val handler = Handler(Looper.getMainLooper())
+        val runnable = object : Runnable {
             override fun run() {
-                handler.post {
-                    // 画像を切り替える
-                    currentImageIndex = (currentImageIndex + 1) % images.size
-                    imageSwitcher.setImageResource(images[currentImageIndex])
-                }
+                val currentItem = viewPager.currentItem
+                val nextItem = if (currentItem == imageList.size - 1) 0 else currentItem + 1
+                viewPager.setCurrentItem(nextItem, true)
+                handler.postDelayed(this, 3000) // 3秒ごとにスライド
             }
-        }, 0, 3000) // 3秒ごとに実行
-    }
-
-    // 画像の切り替えを停止する関数
-    private fun stopImageSwitching() {
-        timer?.cancel()
-        timer = null
+        }
+        handler.postDelayed(runnable, 3000)
     }
 }
