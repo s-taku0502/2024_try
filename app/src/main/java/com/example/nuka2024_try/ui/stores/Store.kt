@@ -1,7 +1,10 @@
 package com.example.nuka2024_try.ui.stores
 
+import com.bumptech.glide.load.model.GlideUrl
+import java.net.URL
+
 // Storeデータクラスを定義
 data class Store(
-    val imageUrl: String,  // 画像のURL（ウェブ画像を表示するため）
-    val name: String       // 店舗名
+    val imageUrl: GlideUrl,  // 画像のリソースID
+    val name: String      // 店舗名
 )
