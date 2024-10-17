@@ -1,3 +1,4 @@
+// StoresFragment.kt
 package com.example.nuka2024_try.ui.stores
 
 import android.os.Bundle
@@ -9,6 +10,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.nuka2024_try.R
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.model.GlideUrl
+
 
 class StoresFragment : Fragment() {
 
@@ -51,3 +56,4 @@ class StoresFragment : Fragment() {
         handler.postDelayed(runnable, 3000)
     }
 }
+
