@@ -28,12 +28,10 @@ class StoresAdapter(
     }
 
     class StoreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.imageView)
+        private val imageView: ImageView = itemView.findViewById(R.id.store_image)
 
         fun bind(store: Store) {
-            Glide.with(itemView.context)
-                .load(store.imageUrl)
-                .into(imageView)
+            imageView.setImageResource(store.imageUrl)
         }
     }
 
