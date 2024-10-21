@@ -18,17 +18,31 @@ class StoresFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var recyclerView: RecyclerView
     private val imageList = listOf(
-        R.drawable.icon,  // スライドショー用の画像リソース
-        R.drawable.nav_icon_stamp,
-        R.drawable.circle_app_icon
+        R.drawable.aurie,  // スライドショー用の画像リソース
+        R.drawable.asutei,
+        R.drawable.ishizakisangyou,
+        R.drawable.ishidashinkyuuchiryouin,
+        R.drawable.imahan,
+        R.drawable.indian_curry,
+        R.drawable.ladysbar_wave,
+        R.drawable.aim_southfort,
+        R.drawable.original_event,
+        R.drawable.original_support
     )
 
     // 2列に表示する画像リスト
     private val storeImages = listOf(
-        Store(R.drawable.icon, "Store 1"),
-        Store(R.drawable.nav_icon_stamp, "Store 2"),
-        Store(R.drawable.circle_app_icon, "Store 3"),
-        Store(R.drawable.coupons, "Store 4")
+        Store(R.drawable.aurie, "アウリエ"),
+        Store(R.drawable.asutei, "アステイ"),
+        Store(R.drawable.ishizakisangyou, "石崎産業"),
+        Store(R.drawable.ishidashinkyuuchiryouin, "いしだ鍼灸治療院"),
+        Store(R.drawable.imahan, "Food & Drink 今伴"),
+        Store(R.drawable.indian_curry, "インデアンカレー金沢額谷店"),
+        Store(R.drawable.ladysbar_wave, "レディスバーWAVE"),
+        Store(R.drawable.aim_southfort, "エイム SOUTH FORT"),
+        Store(R.drawable.original_event, "オリジナル企画"),
+        Store(R.drawable.original_support, "オリジナルサポート"),
+        Store(R.drawable.car_service, "カーサービス Y-TECH")
     )
 
     override fun onCreateView(
