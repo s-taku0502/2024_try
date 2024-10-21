@@ -27,7 +27,8 @@ class StoresFragment : Fragment() {
         R.drawable.ladysbar_wave,
         R.drawable.aim_southfort,
         R.drawable.original_event,
-        R.drawable.original_support
+        R.drawable.original_support,
+        R.drawable.car_service,
     )
 
     // 2列に表示する画像リスト
