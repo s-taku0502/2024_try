@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -54,4 +55,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.journeyapps:zxing-android-embedded:4.1.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    kapt("com.github.bumptech.glide:compiler:4.12.0")
+
 }
