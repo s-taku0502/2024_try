@@ -39,12 +39,12 @@
 
         <item
             android:id="@+id/nav_coupons"
-            android:icon="@drawable/nav_icon_stamp"
+            android:icon="@drawable/baseline_circle_notifications_24"
             android:title="Coupons"/>
 
         <item
             android:id="@+id/nav_setting"
-            android:icon="@drawable/nav_icon_stamp"
+            android:icon="@drawable/baseline_settings_24"
             android:title="Setting"/>
     </group>
 </menu>
