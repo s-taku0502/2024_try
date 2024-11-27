@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/nav_stores"
-        android:name="com.example.nuka2024_try.ui.stores.StoresFragment"
+        android:name="com.example.nuka2024_try.ui.stores.StoreFragment"
         android:label="Stores"
         tools:layout="@layout/fragment_stores" />
 
