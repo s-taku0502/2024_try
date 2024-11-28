@@ -16,5 +16,13 @@
     <string name="menu_stamps">Stamps</string>
     <string name="menu_stores">Stores</string>
     <string name="menu_coupons">coupons</string>
+    <string name="store_name_desc">店舗名</string>
+    <string name="website_desc">"ウェブサイトのURL（仮） : https://sites.google.com/view/daimon-dx "</string>
+    <string name="address_desc">会社住所</string>
+    <string name="business_type_desc">会社業種</string>
+    <string name="store_list_desc">店舗情報</string>
+    <string name="store_info_toggle_desc">会社情報</string>
+    <string name="store_description_desc">詳細情報</string>
+    <string name="store_image_desc">店舗画像</string>
 
 </resources>
