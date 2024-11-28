@@ -47,7 +47,7 @@ class StoreFragment : Fragment() {
                 "石川県",
                 URL("https://sites.google.com/view/daimon-dx/"),
                 R.drawable.ishizakisangyou
-            )
+            ),
         )
 
         // RecyclerView のセットアップ
