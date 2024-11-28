@@ -29,7 +29,7 @@ class StoreFragment : Fragment() {
                 "アウリエの詳細情報",
                 "不動産",
                 "石川県",
-                URL("https://sites.google.com/view/daimon-dx/"),
+                URL("https://aurie.jp/"),
                 R.drawable.aurie
             ),
             Store(
@@ -37,15 +37,15 @@ class StoreFragment : Fragment() {
                 "アスティの詳細情報",
                 "業種",
                 "石川県",
-                URL("https://sites.google.com/view/daimon-dx/"),
+                URL("https://asty-k.jp/"),
                 R.drawable.asutei
             ),
             Store(
                 "石崎産業株式会社",
                 "石崎産業の詳細情報",
-                "業種",
-                "石川県",
-                URL("https://sites.google.com/view/daimon-dx/"),
+                "包装機械製造業",
+                "石川県金沢市大額3丁目194番地",
+                URL("http://www.ishizaki-sangyo.com/"),
                 R.drawable.ishizakisangyou
             ),
         )

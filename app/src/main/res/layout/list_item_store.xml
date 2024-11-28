@@ -54,14 +54,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:focusable="true" />
+            android:focusable="true"/>
 
         <TextView
             android:id="@+id/storeAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:focusable="true" />
+            android:focusable="true"/>
 
         <TextView
             android:id="@+id/storeWebsite"
