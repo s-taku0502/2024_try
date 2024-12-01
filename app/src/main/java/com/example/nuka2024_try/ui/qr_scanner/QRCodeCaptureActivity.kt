@@ -48,7 +48,7 @@ class QRCodeCaptureActivity : AppCompatActivity() {
             // StampsFragmentのインスタンスにアクセスしてスタンプを追加
             val fragment = supportFragmentManager.findFragmentById(R.id.stampContainer) as? StampsFragment
             fragment?.addStamp(qrCode)
-        //fragment?.addStamp(qrCode, findViewById(R.id.stampContainer))  // QRコードをフラグメントに渡す
+            //fragment?.addStamp(qrCode, findViewById(R.id.stampContainer))  // QRコードをフラグメントに渡す
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
