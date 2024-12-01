@@ -17,4 +17,6 @@
     <string name="menu_stores">Stores</string>
     <string name="menu_coupons">coupons</string>
 
+    <string name="store_lst_desc">店舗情報</string>
+
 </resources>

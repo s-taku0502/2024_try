@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:padding="16dp"
         android:clipToPadding="false"
-        android:contentDescription="@string/store_list_desc"
+        android:contentDescription="店舗情報"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
