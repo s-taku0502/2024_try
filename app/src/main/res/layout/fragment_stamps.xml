@@ -452,7 +452,7 @@
                 android:id="@+id/stamp1"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/app_icon"
+                android:src="@drawable/fest_icon"
                 android:visibility="visible" />
 
             <TextView
@@ -477,7 +477,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -501,7 +501,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -524,7 +524,7 @@
                 android:id="@+id/stamp4"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/app_icon"
+                android:src="@drawable/fest_icon"
                 android:visibility="visible" />
 
             <TextView
@@ -549,7 +549,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -573,7 +573,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -596,7 +596,7 @@
                 android:id="@+id/stamp7"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/app_icon"
+                android:src="@drawable/fest_icon"
                 android:visibility="visible" />
 
             <TextView
@@ -621,7 +621,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -645,7 +645,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -668,7 +668,7 @@
                 android:id="@+id/stamp10"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/app_icon"
+                android:src="@drawable/fest_icon"
                 android:visibility="visible" />
 
             <TextView
@@ -693,7 +693,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -716,7 +716,7 @@
                 android:id="@+id/stamp12"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/app_icon"
+                android:src="@drawable/fest_icon"
                 android:visibility="visible" />
 
             <TextView
@@ -741,7 +741,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -764,7 +764,7 @@
                 android:id="@+id/stamp14"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/app_icon"
+                android:src="@drawable/fest_icon"
                 android:visibility="visible" />
 
             <TextView
@@ -789,7 +789,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
@@ -813,7 +813,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/app_icon" />
+                app:srcCompat="@drawable/fest_icon" />
 
             <TextView
                 android:layout_width="80dp"
