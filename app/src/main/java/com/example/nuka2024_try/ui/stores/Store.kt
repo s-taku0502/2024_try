@@ -6,6 +6,7 @@ data class Store(
     val name: String,
     val description: String, // 例：○○の詳細情報
     val industries: String, // 例：業界
+    val company_feature: String, // 例：会社の特徴
     val address: String, // 例：住所
     val website_url: URL, // 例：ホームページURL
     val imageResId: Int, // Drawable リソースID

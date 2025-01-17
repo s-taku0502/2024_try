@@ -59,6 +59,15 @@
             android:focusable="true"/>
 
         <TextView
+            android:id="@+id/storeCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="会社の特徴"
+            android:focusable="true"
+            android:paddingTop="4dp"/>
+
+        <TextView
             android:id="@+id/storeAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

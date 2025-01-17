@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.nuka2024_try.R
 import com.example.nuka2024_try.databinding.FragmentQrcodeBinding
-import com.example.nuka2024_try.databinding.FragmentSlideshowBinding
+
 
 class ScannersFragment : Fragment() {
 

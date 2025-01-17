@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nuka2024_try.R
+import org.w3c.dom.Text
 import java.net.URL
 
 class StoreAdapter(private val storeList: List<Store>) :
@@ -22,6 +23,7 @@ class StoreAdapter(private val storeList: List<Store>) :
         val expandedLayout: View = view.findViewById(R.id.expandedLayout)
         val toggleButton: TextView = view.findViewById(R.id.toggleButton) // 「詳細を見る/閉じる」用
         val industriesTextView: TextView = view.findViewById(R.id.storeIndustries)
+        val companyTextView: TextView = view.findViewById(R.id.storeCompany)
         val addressTextView: TextView = view.findViewById(R.id.storeAddress)
         val websiteTextView: TextView = view.findViewById(R.id.storeWebsite)
     }
@@ -40,6 +42,7 @@ class StoreAdapter(private val storeList: List<Store>) :
         holder.descriptionTextView.text = store.description
         holder.storeImageView.setImageResource(store.imageResId)
         holder.industriesTextView.text = "業種: ${store.industries}"
+        holder.companyTextView.text = "会社の特徴: ${store.company_feature}"
         holder.addressTextView.text = "住所: ${store.address}"
         holder.websiteTextView.text = "ホームページ: ${store.website_url}"
 
