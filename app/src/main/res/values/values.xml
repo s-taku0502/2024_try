@@ -1,3 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 色のリソース -->
+    <color name="primary_color">#6200EE</color>
+    <color name="secondary_color">#03DAC5</color>
+
+    <!-- 寸法のリソース -->
+    <dimen name="default_margin">16dp</dimen>
+
+    <!-- スタイルのリソース -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorAccent">@color/secondary_color</item>
+    </style>
 </resources>
