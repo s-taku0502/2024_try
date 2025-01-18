@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#E8F5E9"
+    android:layout_marginBottom="8dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- 店舗名 -->
+    <TextView
+        android:id="@+id/storeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="株式会社〇〇"
+        android:textSize="14sp"
+        android:textColor="#000000" />
+
+    <!-- クーポン詳細 -->
+    <TextView
+        android:id="@+id/couponDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="やきとり   10%OFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="8dp"/>
+
+    <!-- 有効期限 -->
+    <TextView
+        android:id="@+id/couponExpiry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="利用期限：2025年〇月〇日〇時〇分"
+        android:textSize="14sp"
+        android:textColor="#000000"
+        android:layout_marginTop="4dp" />
+
+    <!-- ボタン -->
+    <Button
+        android:id="@+id/useCouponButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="クーポンを利用する"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:background="#81C784"
+        android:textColor="#FFFFFF" />
+</LinearLayout>

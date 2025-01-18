@@ -9,14 +9,11 @@
     <string name="action_mail">受信箱</string>
     <string name="action_ToHome">ホームページへ移動する</string>
     <string name="action_scan">QRコード読み取り</string>
-
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_stamps">Stamps</string>
     <string name="menu_stores">Stores</string>
     <string name="menu_coupons">coupons</string>
-
     <string name="store_lst_desc">店舗情報</string>
-
 </resources>

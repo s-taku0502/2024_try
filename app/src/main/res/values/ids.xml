@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="couponDetails" type="id">@+id/couponDetails</item>
+    <item name="couponExpiry" type="id">@+id/couponExpiry</item>
+    <item name="useCouponButton" type="id">@+id/useCouponButton</item>
+    <item name="homeButton" type="id">homeButton</item>
 </resources>
