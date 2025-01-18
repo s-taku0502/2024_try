@@ -1,28 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
-
-    <include
-        android:id="@+id/app_bar_main"
-        layout="@layout/app_bar_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</androidx.drawerlayout.widget.DrawerLayout> -->
-
-
-
-
-
-
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -31,24 +7,34 @@
     android:layout_height="match_parent"
     tools:context=".ui.qr_scanner.QRCodeCaptureActivity">
 
+    <!-- アプリバーを含む -->
     <include
         android:id="@+id/app_bar_main"
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@+id/qr_button"
-        app:layout_constraintEnd_toEndOf="@+id/qr_button" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- QRコードスキャンボタン -->
     <Button
         android:id="@+id/qr_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="QRカメラ起動"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_main"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/homeButton" />
 
+    <!-- ホームに戻るボタン -->
+    <Button
+        android:id="@+id/homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ホームに戻る"
+        app:layout_constraintTop_toBottomOf="@id/qr_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,14 +16,18 @@ class QRCodeCaptureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrscanner)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // 縦画面固定
 
+        // 縦画面固定
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        // QRコードスキャンの設定
         val integrator = IntentIntegrator(this)
         integrator.setCaptureActivity(CaptureActivity::class.java)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
         integrator.setPrompt("QRコードを読み取ってみよう！")
         integrator.initiateScan()
 
+        // ホームボタンの設定
         val homeButton = findViewById<Button>(R.id.homeButton)
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -34,9 +38,12 @@ class QRCodeCaptureActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null && result.contents != null) {
+            // QRコードの内容をチェック
             if (result.contents == "yakitori_zen_qr") {
-                val intent = Intent(this, StampsFragment::class.java)
-                intent.putExtra("stampCode", "yakitori")
+                // yakitori_icon_stamp が読み取られた場合
+                val intent = Intent(this, StampsFragment::class.java).apply {
+                    putExtra("stampCode", "yakitori")
+                }
                 startActivity(intent)
             }
         } else {

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nuka2024_try.R
 
+// クーポンデータクラス
 data class Coupon(val storeName: String, val details: String, val discount: String, val expiry: String)
 
 class CouponAdapter(private val coupons: MutableList<Coupon>) : RecyclerView.Adapter<CouponAdapter.CouponViewHolder>() {
@@ -26,11 +27,18 @@ class CouponAdapter(private val coupons: MutableList<Coupon>) : RecyclerView.Ada
 
     override fun onBindViewHolder(holder: CouponViewHolder, position: Int) {
         val coupon = coupons[position]
+
+        // クーポン情報をバインド
         holder.storeName.text = coupon.storeName
         holder.couponDetails.text = coupon.details
-        holder.couponExpiry.text = coupon.expiry
+        holder.couponExpiry.text = "有効期限: ${coupon.expiry}"
+
+        // "使用済み"状態をリセット
+        holder.useButton.text = "使用する"
+        holder.useButton.isEnabled = true
 
         holder.useButton.setOnClickListener {
+            // 使用済み処理
             holder.useButton.text = "使用済み"
             holder.useButton.isEnabled = false
         }
@@ -40,6 +48,7 @@ class CouponAdapter(private val coupons: MutableList<Coupon>) : RecyclerView.Ada
         return coupons.size
     }
 
+    // クーポンリストを更新
     fun updateCoupons(newCoupons: List<Coupon>) {
         coupons.clear()
         coupons.addAll(newCoupons)

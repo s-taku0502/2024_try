@@ -21,6 +21,10 @@ class StampsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // スタンプ数の読み込み
+        loadStampData()
+
+        // QRコード結果を取得
         val qrCodeResult = arguments?.getString("stampCode")
         if (qrCodeResult != null) {
             processQRCode(qrCodeResult)
@@ -34,12 +38,13 @@ class StampsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_stamps, container, false)
         stampTextView = view.findViewById(R.id.stampCountTextView)
         stampContainer = view.findViewById(R.id.stampContainer)
+        updateStampUI()
         return view
     }
 
     private fun processQRCode(qrCodeResult: String) {
         when (qrCodeResult) {
-            "yakitori" -> addStampWithIcon(R.drawable.yakitori_icon_stamp)
+            "yakitori_zen_qr" -> addStampWithIcon(R.drawable.yakitori_icon_stamp)
             else -> stampTextView.text = "無効なQRコードです"
         }
     }
@@ -52,6 +57,7 @@ class StampsFragment : Fragment() {
         stampCount++
         saveStampData()
         updateStampUI()
+        checkForCoupons()
     }
 
     private fun saveStampData() {
@@ -61,7 +67,24 @@ class StampsFragment : Fragment() {
         editor?.apply()
     }
 
+    private fun loadStampData() {
+        val sharedPreferences = activity?.getSharedPreferences("stamps", Context.MODE_PRIVATE)
+        stampCount = sharedPreferences?.getInt("stampCount", 0) ?: 0
+    }
+
     private fun updateStampUI() {
         stampTextView.text = "スタンプ数: $stampCount"
+    }
+
+    private fun checkForCoupons() {
+        val sharedPreferences = activity?.getSharedPreferences("coupons", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+
+        when (stampCount) {
+            3 -> editor?.putBoolean("coupon_10", true)
+            5 -> editor?.putBoolean("coupon_15", true)
+            7 -> editor?.putBoolean("coupon_20", true)
+        }
+        editor?.apply()
     }
 }
