@@ -4,4 +4,5 @@
     <item name="couponExpiry" type="id">@+id/couponExpiry</item>
     <item name="useCouponButton" type="id">@+id/useCouponButton</item>
     <item name="homeButton" type="id">homeButton</item>
+    <item name="stampContainer" type="id">stampContainer</item>
 </resources>

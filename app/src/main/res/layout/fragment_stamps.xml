@@ -7,30 +7,28 @@
     android:layout_height="match_parent"
     tools:context=".ui.stamps.StampsFragment">
 
-    <!-- タイトル -->
+    <!-- スタンプ数表示 -->
     <TextView
-        android:id="@+id/stamps_title"
-        android:layout_width="0dp"
+        android:id="@+id/stampCountTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="スタンプ一覧"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center"
+        android:text="スタンプ数: 0"
+        android:textSize="18sp"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- スタンプを表示する RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/stamps_recycler_view"
+    <!-- スタンプリスト -->
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/stampContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/stamps_title"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        app:flexWrap="wrap"
+        app:justifyContent="center"
+        app:layout_constraintTop_toBottomOf="@id/stampCountTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/list_item_stamp" />
-
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

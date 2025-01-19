@@ -5,21 +5,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.nuka2024_try.databinding.FragmentCouponsBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.nuka2024_try.R
 
 class CouponsFragment : Fragment() {
-    private lateinit var binding: FragmentCouponsBinding
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var couponAdapter: CouponAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCouponsBinding.inflate(inflater, container, false)
-        displayCoupons()
-        return binding.root
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_coupons, container, false)
+        recyclerView = view.findViewById(R.id.couponsRecyclerView)
+
+        val coupons = loadCoupons()
+        couponAdapter = CouponAdapter(coupons)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = couponAdapter
+
+        return view
     }
 
-    private fun displayCoupons() {
-        val coupons = CouponManager.getCoupons()
-        binding.couponsList.text = coupons.joinToString("\n")
+    private fun loadCoupons(): List<Coupon> {
+        return listOf(
+            Coupon("株式会社〇〇", "やきとり", "10%OFF", "2025年〇月〇日〇時〇分"),
+            Coupon("株式会社〇〇", "やきとり", "10%OFF", "2025年〇月〇日〇時〇分"),
+            Coupon("株式会社〇〇", "やきとり", "10%OFF", "2025年〇月〇日〇時〇分")
+        )
     }
 }

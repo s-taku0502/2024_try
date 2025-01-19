@@ -3,32 +3,34 @@ package com.example.nuka2024_try.ui.qr_scanner
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.nuka2024_try.MainActivity
-import com.example.nuka2024_try.databinding.ActivityQrscannerBinding
+import com.google.zxing.integration.android.IntentIntegrator
+import com.journeyapps.barcodescanner.CaptureActivity
+import com.example.nuka2024_try.ui.stamps.StampsFragment
 
 class QRCodeCaptureActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityQrscannerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityQrscannerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // ホーム画面に戻るボタンのクリックリスナー
-        binding.homeButton.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
-
-        // QRコードスキャンの初期化 (簡易例)
-        initializeQRScanner()
+        val integrator = IntentIntegrator(this)
+        integrator.setCaptureActivity(CaptureActivity::class.java)
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+        integrator.setPrompt("QRコードをスキャンしてください")
+        integrator.initiateScan()
     }
 
-    private fun initializeQRScanner() {
-        // QRコードスキャンのロジック (仮のデモ用)
-        // 実際のライブラリ(ZXing等)を使用して実装する
-        val scannedQRCode = "yakitori_zen_qr" // 仮定: スキャンしたQRコードの値
-        if (scannedQRCode == "yakitori_zen_qr") {
-            StampsManager.addStamp("yakitori_icon_stamp")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null && result.contents != null) {
+            val fragment = StampsFragment().apply {
+                arguments = Bundle().apply {
+                    putString("qrCodeResult", result.contents)
+                }
+            }
+            supportFragmentManager.beginTransaction()
+                .replace(android.R.id.content, fragment)
+                .commit()
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 }

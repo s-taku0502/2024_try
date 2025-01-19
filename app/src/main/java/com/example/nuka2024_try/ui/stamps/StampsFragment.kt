@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.nuka2024_try.R
 import com.google.android.flexbox.FlexboxLayout
@@ -13,23 +16,16 @@ import com.google.android.flexbox.FlexboxLayout
 class StampsFragment : Fragment() {
 
     private var stampCount = 0
+    private lateinit var stampTextView: TextView
     private lateinit var stampContainer: FlexboxLayout
-    private var listener: StampListener? = null
 
-    // リスナーを設定する
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            listener = context as StampListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement StampListener")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val qrCodeResult = arguments?.getString("qrCodeResult")
+        if (qrCodeResult != null) {
+            processQRCode(qrCodeResult)
         }
-    }
-
-    // リスナーをクリアする
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
     }
 
     override fun onCreateView(
@@ -37,31 +33,36 @@ class StampsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_stamps, container, false)
+        stampTextView = view.findViewById(R.id.stampCountTextView)
         stampContainer = view.findViewById(R.id.stampContainer)
-
-        // QRコード結果を処理
-        val qrCodeResult = arguments?.getString("stampCode")
-        if (qrCodeResult == "yakitori_zen_qr") {
-            addStampWithIcon(R.drawable.yakitori_icon_stamp)
-        }
         return view
     }
 
-    // スタンプを追加し、カウントを更新
+    private fun processQRCode(qrCodeResult: String) {
+        when (qrCodeResult) {
+            "yakitori" -> addStampWithIcon(R.drawable.yakitori_icon_stamp)
+            else -> Toast.makeText(context, "無効なQRコードです", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun addStampWithIcon(iconResId: Int) {
         val imageView = ImageView(context)
         imageView.setImageResource(iconResId)
-        imageView.layoutParams = FlexboxLayout.LayoutParams(100, 100)
+        imageView.layoutParams = LinearLayout.LayoutParams(100, 100)
         stampContainer.addView(imageView)
-
         stampCount++
-        saveStampCount()
-        listener?.onStampCountUpdated(stampCount) // リスナーを通じて通知
+        updateStampUI()
+        saveStampData()
     }
 
-    // スタンプ数を保存
-    private fun saveStampCount() {
+    private fun updateStampUI() {
+        stampTextView.text = "スタンプ数: $stampCount"
+    }
+
+    private fun saveStampData() {
         val sharedPreferences = activity?.getSharedPreferences("stamps", Context.MODE_PRIVATE)
-        sharedPreferences?.edit()?.putInt("stampCount", stampCount)?.apply()
+        val editor = sharedPreferences?.edit()
+        editor?.putInt("stampCount", stampCount)
+        editor?.apply()
     }
 }
