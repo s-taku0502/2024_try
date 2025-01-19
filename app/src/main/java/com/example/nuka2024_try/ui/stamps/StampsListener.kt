@@ -1,4 +1,5 @@
 package com.example.nuka2024_try.ui.stamps
 
-class StampsListener {
+interface StampListener {
+    fun onStampCountUpdated(count: Int)
 }
