@@ -1,4 +1,4 @@
-package com.example.nuka2024_try.stamps
+package com.example.nuka2024_try.ui.qr_scanner
 
 import com.example.nuka2024_try.ui.coupons.CouponManager
 
