@@ -40,6 +40,7 @@ class StoreAdapter(private val storeList: List<Store>) :
         holder.descriptionTextView.text = store.description
         holder.storeImageView.setImageResource(store.imageResId)
         holder.industriesTextView.text = "業種: ${store.industries}"
+        holder.industriesTextView.text = "会社の特徴: ${store.company_features}"
         holder.addressTextView.text = "住所: ${store.address}"
         holder.websiteTextView.text = "ホームページ: ${store.website_url}"
 
