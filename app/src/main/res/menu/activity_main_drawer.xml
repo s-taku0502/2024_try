@@ -9,19 +9,6 @@
             android:icon="@drawable/ic_menu_home"
             android:title="@string/menu_home" />
 
-        <!--
-
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
-
-            -->
-
         <item
             android:id="@+id/nav_scan"
             android:icon="@drawable/ic_menu_qrcode"
@@ -42,9 +29,9 @@
             android:icon="@drawable/baseline_circle_notifications_24"
             android:title="Coupons"/>
 
-        <item
-            android:id="@+id/nav_setting"
-            android:icon="@drawable/baseline_settings_24"
-            android:title="Setting"/>
+<!--        <item-->
+<!--            android:id="@+id/nav_setting"-->
+<!--            android:icon="@drawable/baseline_settings_24"-->
+<!--            android:title="Setting"/>-->
     </group>
 </menu>

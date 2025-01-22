@@ -9,13 +9,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nuka2024_try.MainActivity
 import com.example.nuka2024_try.R
-import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.FirebaseAuth
 
 // ユーザー登録画面を提供するアクティビティ
 class RegisterActivity : AppCompatActivity() {
 
     // Firebase Authentication インスタンス
-    private lateinit var auth: FirebaseAuth
+//    private lateinit var auth: FirebaseAuth
     // メールアドレス入力欄
     private lateinit var emailEditText: EditText
     // パスワード入力欄
@@ -53,7 +53,7 @@ class RegisterActivity : AppCompatActivity() {
 
     // Firebase Authentication インスタンスの取得
     private fun setupFirebase() {
-        auth = FirebaseAuth.getInstance()
+//        auth = FirebaseAuth.getInstance()
     }
 
     // ボタンのクリックイベントを設定
@@ -72,7 +72,7 @@ class RegisterActivity : AppCompatActivity() {
         if (!validateInput(email, password)) return
 
         // ユーザー登録を実行
-        registerUser(email, password)
+//        registerUser(email, password)
     }
 
     // 入力内容を検証
@@ -86,17 +86,17 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     // Firebase Authentication を使ってユーザーを登録
-    private fun registerUser(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    handleSuccessfulRegistration() // 登録成功時の処理
-                } else {
-                    // エラー時にエラーメッセージを表示
-                    showToast("登録失敗: ${task.exception?.message}")
-                }
-            }
-    }
+//    private fun registerUser(email: String, password: String) {
+//        auth.createUserWithEmailAndPassword(email, password)
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    handleSuccessfulRegistration() // 登録成功時の処理
+//                } else {
+//                    // エラー時にエラーメッセージを表示
+//                    showToast("登録失敗: ${task.exception?.message}")
+//                }
+//            }
+//    }
 
     // 登録成功時の処理
     private fun handleSuccessfulRegistration() {

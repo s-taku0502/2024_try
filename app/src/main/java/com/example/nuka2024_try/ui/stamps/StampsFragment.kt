@@ -1,6 +1,9 @@
 package com.example.nuka2024_try.ui.stamps
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.nuka2024_try.R
 import com.google.android.flexbox.FlexboxLayout
+import org.json.JSONArray
 import javax.microedition.khronos.opengles.GL11
 
 class StampsFragment : Fragment() {
@@ -37,6 +41,8 @@ class StampsFragment : Fragment() {
     private lateinit var stamp15: ImageView
     private lateinit var stamp16: ImageView
 
+    private lateinit var stampImageViews: List<ImageView>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,27 +63,55 @@ class StampsFragment : Fragment() {
         stampTextView = view.findViewById(R.id.stampCountTextView)
         stampContainer = view.findViewById(R.id.stampContainer)
 
-        // 各スタンプのImageViewを初期化
-        stamp1 = view.findViewById(R.id.stamp1)
-        stamp2 = view.findViewById(R.id.stamp2)
-        stamp3 = view.findViewById(R.id.stamp3)
-        stamp4 = view.findViewById(R.id.stamp4)
-        stamp5 = view.findViewById(R.id.stamp5)
-        stamp6 = view.findViewById(R.id.stamp6)
-        stamp7 = view.findViewById(R.id.stamp7)
-        stamp8 = view.findViewById(R.id.stamp8)
-        stamp9 = view.findViewById(R.id.stamp9)
-        stamp10 = view.findViewById(R.id.stamp10)
-        stamp11 = view.findViewById(R.id.stamp11)
-        stamp12 = view.findViewById(R.id.stamp12)
-        stamp13 = view.findViewById(R.id.stamp13)
-        stamp14 = view.findViewById(R.id.stamp14)
-        stamp15 = view.findViewById(R.id.stamp15)
-        stamp16 = view.findViewById(R.id.stamp16)
+        // 各スタンプのImageViewをリストで初期化
+        stampImageViews = listOf(
+            view.findViewById(R.id.stamp1),
+            view.findViewById(R.id.stamp2),
+            view.findViewById(R.id.stamp3),
+            view.findViewById(R.id.stamp4),
+            view.findViewById(R.id.stamp5),
+            view.findViewById(R.id.stamp6),
+            view.findViewById(R.id.stamp7),
+            view.findViewById(R.id.stamp8),
+            view.findViewById(R.id.stamp9),
+            view.findViewById(R.id.stamp10),
+            view.findViewById(R.id.stamp11),
+            view.findViewById(R.id.stamp12),
+            view.findViewById(R.id.stamp13),
+            view.findViewById(R.id.stamp14),
+            view.findViewById(R.id.stamp15),
+            view.findViewById(R.id.stamp16)
+        )
+
+        // グレースケールのColorMatrixを設定
+        val grayMatrix = ColorMatrix().apply { setSaturation(0f) }
+        val grayFilter = ColorMatrixColorFilter(grayMatrix)
+
+        // 全てのスタンプをグレースケールに設定
+        stampImageViews.forEach { it.colorFilter = grayFilter }
+
+        // 保存されているデータを読み込んでカラー表示を適用
+        val savedStamps = loadNumberArray("stamps")
+        savedStamps.forEach { index ->
+            if (index in stampImageViews.indices) {
+                stampImageViews[index].clearColorFilter() // カラー表示に変更
+            }
+        }
 
         return view
     }
 
+    private fun loadNumberArray(key: String): List<Int>{
+        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences("Stamps",Context.MODE_PRIVATE)
+        val jsonString = sharedPreferences.getString(key,null) ?:return emptyList()
+        val jsonArray = JSONArray(jsonString)
+
+        val numbers = mutableListOf<Int>()
+        for (i in 0 until jsonArray.length()){
+            numbers.add((jsonArray.getInt(i)))
+        }
+        return  numbers
+    }
     // スタンプを動的に表示するメソッド
     private fun showStamp(stamp: ImageView) {
         stamp.visibility = View.VISIBLE
@@ -158,6 +192,9 @@ class StampsFragment : Fragment() {
         updateStampUI()
         saveStamp(stampCode)  // スタンプを保存する
     }
+
+
+
 
     // UIをスタンプ数に応じて更新
     private fun updateStampUI() {

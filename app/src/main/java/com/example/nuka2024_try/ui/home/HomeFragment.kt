@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
 
         val textView_1: TextView = binding.textHome
 
-        val spannable_1 = SpannableString("額地区スタンプらり～\nスタンプらり～を活用して、商店街をまわろう！")
+        val spannable_1 = SpannableString("額地区スタンプらり～\nスタンプらり～を活用して、商店街を周ろう！")
 
     // "スタンプらり～" のサイズを20spに設定
 
