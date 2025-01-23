@@ -34,7 +34,7 @@ class QRCodeCaptureActivity : AppCompatActivity() {
                     scannedCode.toInt()
                 } catch (e: NumberFormatException) {
                     // 数字でない場合は無効として扱う
-                    Toast.makeText(this, "Invalid QR Code format.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "このQRCodeは無効です", Toast.LENGTH_LONG).show()
                     finish()
                     return@registerForActivityResult
                 }
@@ -47,7 +47,7 @@ class QRCodeCaptureActivity : AppCompatActivity() {
                     Toast.makeText(this, "Scanned QR Code: $scannedCode", Toast.LENGTH_LONG).show()
                 } else {
                     // 0未満なら無効として扱う
-                    Toast.makeText(this, "Invalid QR Code: $scannedCode", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "このQRCodeは無効です: $scannedCode", Toast.LENGTH_LONG).show()
                 }
                 finish()
             } else {
