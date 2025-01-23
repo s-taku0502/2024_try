@@ -27,7 +27,7 @@ class QRCodeCaptureActivity : AppCompatActivity() {
 
             if (qrResult != null && qrResult.contents != null) {
                 val scannedCode = qrResult.contents
-                Log.d("QRCodeCaptureActivity", "QR Code scanned: $scannedCode")
+                Log.d("QRCodeCaptureActivity", "QRコードを読み取ってみよう！: $scannedCode")
 
                 // QRコードの文字列を Int に変換
                 val codeInt = try {
@@ -44,7 +44,7 @@ class QRCodeCaptureActivity : AppCompatActivity() {
                 if (shiftedIndex >= 0) {
                     // スタンプの保存
                     saveStamp(shiftedIndex)
-                    Toast.makeText(this, "Scanned QR Code: $scannedCode", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "取得したQRコードはこちらです→: $scannedCode", Toast.LENGTH_LONG).show()
                 } else {
                     // 0未満なら無効として扱う
                     Toast.makeText(this, "このQRCodeは無効です: $scannedCode", Toast.LENGTH_LONG).show()
@@ -63,8 +63,9 @@ class QRCodeCaptureActivity : AppCompatActivity() {
 
         // ZXing のスキャナを呼び出し、起動する
         IntentIntegrator(this).apply {
-            setOrientationLocked(false) // 画面回転をロックするかどうか
-            setPrompt("Scanning QR Code...") // 下部に出るガイドテキスト
+            setCaptureActivity(PortraitCaptureActivity::class.java)
+            setOrientationLocked(true) // 画面回転をロックするかどうか
+            setPrompt("QRコードを読み取ってみよう！") // 下部に出るガイドテキスト
             // setBeepEnabled(false)
             // setBarcodeImageEnabled(true)
         }.also { integrator ->
