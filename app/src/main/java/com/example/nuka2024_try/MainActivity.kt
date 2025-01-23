@@ -3,6 +3,7 @@ package com.example.nuka2024_try
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 // アクティビティを作りたい場合はここに追記
                 R.id.nav_scan -> {
                     // QRスキャンのアクティビティを起動
+                    Toast.makeText(this, "QRスキャンのアクティビティを起動します", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, QRCodeCaptureActivity::class.java)
                     startActivity(intent)
                     // ドロワーを閉じる

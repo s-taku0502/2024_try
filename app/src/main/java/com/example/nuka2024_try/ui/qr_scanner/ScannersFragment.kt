@@ -23,7 +23,6 @@ import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoderFactory
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
 
-
 class ScannersFragment : Fragment() {
 
     private var _binding: FragmentQrcodeBinding? = null
@@ -37,10 +36,13 @@ class ScannersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentQrcodeBinding.inflate(inflater, container, false)
+        Log.d("ScannersFragment", "onCreateView called")
 
         if (!hasCameraPermission()) {
+            Log.d("ScannersFragment", "Camera permission not granted, requesting permission")
             requestCameraPermission()
         } else {
+            Log.d("ScannersFragment", "Camera permission granted, setting up barcode reader")
             setupBarcodeReader()
         }
 
@@ -48,6 +50,8 @@ class ScannersFragment : Fragment() {
     }
 
     private fun setupBarcodeReader() {
+        Log.d("ScannersFragment", "Setting up barcode reader")
+
         // デコード設定をカスタマイズ
         val decodeHints = mutableMapOf<DecodeHintType, Any>()
         decodeHints[DecodeHintType.TRY_HARDER] = true // より積極的にデコード
@@ -55,39 +59,42 @@ class ScannersFragment : Fragment() {
         decodeHints[DecodeHintType.CHARACTER_SET] = "UTF-8" // UTF-8に対応
 
         val decoderFactory: DecoderFactory = DefaultDecoderFactory(
-            listOf(BarcodeFormat.QR_CODE), // サポートするフォーマットを設定
-            decodeHints, // デコードヒントを設定
-            null, // 文字エンコーディング（使わない場合は null）
-            0 // ハードウェア設定。0 を渡してデフォルト動作を使用
+            listOf(BarcodeFormat.QR_CODE),
+            decodeHints,
+            null,
+            0
         )
-
-
 
         binding.qrcodeReader.barcodeView.decoderFactory = decoderFactory
 
         binding.qrcodeReader.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult) {
                 val qrCodeText = result.text
+                Log.d("ScannersFragment", "QR Code scanned: $qrCodeText")
                 if (qrCodeText.isNotEmpty()) {
-                    Log.d("QRCode", qrCodeText)
                     Toast.makeText(requireContext(), "QR Code: $qrCodeText", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.d("ScannersFragment", "QR Code scan result was empty")
                 }
             }
 
             override fun possibleResultPoints(resultPoints: List<ResultPoint>) {
-                // 必要に応じて実装
+                Log.d("ScannersFragment", "Possible result points: $resultPoints")
             }
         })
     }
 
     private fun hasCameraPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
+        val hasPermission = ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
+        Log.d("ScannersFragment", "Camera permission check: $hasPermission")
+        return hasPermission
     }
 
     private fun requestCameraPermission() {
+        Log.d("ScannersFragment", "Requesting camera permission")
         ActivityCompat.requestPermissions(
             requireActivity(),
             arrayOf(Manifest.permission.CAMERA),
@@ -103,8 +110,10 @@ class ScannersFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("ScannersFragment", "Camera permission granted")
                 setupBarcodeReader()
             } else {
+                Log.d("ScannersFragment", "Camera permission denied")
                 Toast.makeText(requireContext(), "カメラの許可が必要です", Toast.LENGTH_SHORT).show()
             }
         }
@@ -112,6 +121,7 @@ class ScannersFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        Log.d("ScannersFragment", "onResume called")
         if (hasCameraPermission()) {
             binding.qrcodeReader.resume()
         }
@@ -119,18 +129,22 @@ class ScannersFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        Log.d("ScannersFragment", "onPause called")
         binding.qrcodeReader.pause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d("ScannersFragment", "onDestroyView called")
         _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("ScannersFragment", "onViewCreated called")
 
         view.findViewById<Button>(R.id.ToHome).setOnClickListener {
+            Log.d("ScannersFragment", "Navigating to HomeFragment")
             findNavController().navigate(R.id.action_qrCodeCaptureFragment_to_homeFragment)
         }
     }

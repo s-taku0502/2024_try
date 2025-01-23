@@ -92,6 +92,7 @@ class StampsFragment : Fragment() {
 
         // 保存されているデータを読み込んでカラー表示を適用
         val savedStamps = loadNumberArray("stamps")
+        stampTextView.text = "スタンプ枚数: ${savedStamps.size}"
         savedStamps.forEach { index ->
             if (index in stampImageViews.indices) {
                 stampImageViews[index].clearColorFilter() // カラー表示に変更
@@ -110,6 +111,7 @@ class StampsFragment : Fragment() {
         for (i in 0 until jsonArray.length()){
             numbers.add((jsonArray.getInt(i)))
         }
+        stampCount = numbers.size
         return  numbers
     }
     // スタンプを動的に表示するメソッド

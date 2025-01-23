@@ -5,5 +5,6 @@ data class Coupon(
     val title: String,
     val discount: String,
     val expiration: String,
-    var isUsed: Boolean
+    var isUsed: Boolean = false,
+    var isUnlocked: Boolean = false // スタンプ条件を満たしたか
 )

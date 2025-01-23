@@ -1,124 +1,99 @@
 package com.example.nuka2024_try.ui.qr_scanner
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.example.nuka2024_try.R
-import com.example.nuka2024_try.ui.stamps.StampsFragment
 import com.google.zxing.integration.android.IntentIntegrator
-import com.journeyapps.barcodescanner.CaptureActivity
-import com.journeyapps.barcodescanner.CaptureManager
-import com.journeyapps.barcodescanner.DecoratedBarcodeView
-/*
-class QRCodeCaptureActivity : CaptureActivity() {
-    private lateinit var capture: CaptureManager
+import com.google.zxing.integration.android.IntentResult
+import org.json.JSONArray
+
+class QRCodeCaptureActivity : AppCompatActivity() {
+
+    // ActivityResultLauncher を作成（スキャンアプリから結果を受け取る）
+    private val qrCodeLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            Log.d("QRCodeCaptureActivity", "Activity result received: ${result.resultCode}")
+
+            val intentData: Intent? = result.data
+            val qrResult: IntentResult? = IntentIntegrator.parseActivityResult(
+                result.resultCode,
+                intentData
+            )
+
+            if (qrResult != null && qrResult.contents != null) {
+                val scannedCode = qrResult.contents
+                Log.d("QRCodeCaptureActivity", "QR Code scanned: $scannedCode")
+
+                // QRコードの文字列を Int に変換
+                val codeInt = try {
+                    scannedCode.toInt()
+                } catch (e: NumberFormatException) {
+                    // 数字でない場合は無効として扱う
+                    Toast.makeText(this, "Invalid QR Code format.", Toast.LENGTH_LONG).show()
+                    finish()
+                    return@registerForActivityResult
+                }
+
+                val shiftedIndex = codeInt - 1
+
+                if (shiftedIndex >= 0) {
+                    // スタンプの保存
+                    saveStamp(shiftedIndex)
+                    Toast.makeText(this, "Scanned QR Code: $scannedCode", Toast.LENGTH_LONG).show()
+                } else {
+                    // 0未満なら無効として扱う
+                    Toast.makeText(this, "Invalid QR Code: $scannedCode", Toast.LENGTH_LONG).show()
+                }
+                finish()
+            } else {
+                Toast.makeText(this, "No QR Code detected.", Toast.LENGTH_SHORT).show()
+                Log.d("QRCodeCaptureActivity", "QR Code contents were null or scanning was canceled.")
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_qrcode)
+        // 画面レイアウトを表示したい場合は setContentView(R.layout.fragment_qrcode) を使う
+        // setContentView(R.layout.fragment_qrcode)
 
-        val barcodeScannerView = findViewById<DecoratedBarcodeView>(R.id.qrcode_reader)
-
-        capture = CaptureManager(this, barcodeScannerView)
-        capture.initializeFromIntent(intent, savedInstanceState)
-        capture.decode() // QRコードのスキャンを開始
-    }
-
-    override fun onResume() {
-        super.onResume()
-        capture.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        capture.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        capture.onDestroy()
-    }
-
- */
-/*
-class QRCodeCaptureActivity : AppCompatActivity() {
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null && result.contents != null) {
-            val qrCode = result.contents  // QRコードの内容を取得
-
-            // StampsFragmentのインスタンスにアクセスしてスタンプを追加
-            val fragment = supportFragmentManager.findFragmentById(R.id.stampContainer) as? StampsFragment
-            fragment?.addStamp(qrCode, findViewById(R.id.stampContainer))  // QRコードをフラグメントに渡す
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
+        // ZXing のスキャナを呼び出し、起動する
+        IntentIntegrator(this).apply {
+            setOrientationLocked(false) // 画面回転をロックするかどうか
+            setPrompt("Scanning QR Code...") // 下部に出るガイドテキスト
+            // setBeepEnabled(false)
+            // setBarcodeImageEnabled(true)
+        }.also { integrator ->
+            Log.d("QRCodeCaptureActivity", "Launching QR Code scanner")
+            qrCodeLauncher.launch(integrator.createScanIntent())
         }
     }
-}
-}
 
-/*
-class QRCodeCaptureActivity : AppCompatActivity() {
+    /**
+     * スタンプをSharedPreferencesに保存する
+     */
+    private fun saveStamp(index: Int) {
+        Log.d("QRCodeCaptureActivity", "Saving stamp: $index")
+        val sharedPreferences = getSharedPreferences("Stamps", Context.MODE_PRIVATE)
+        val currentData = loadNumberArray("stamps").toMutableSet()
+        currentData.add(index)
+        val jsonArray = JSONArray(currentData.toList())
+        sharedPreferences.edit().putString("stamps", jsonArray.toString()).apply()
+        Log.d("QRCodeCaptureActivity", "Stamp saved: $jsonArray")
+    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null && result.contents != null) {
-            val qrCode = result.contents  // QRコードの内容を取得
-
-            // StampsFragmentのインスタンスにアクセスしてスタンプを追加
-            val fragment = supportFragmentManager.findFragmentById(R.id.stampContainer) as? StampsFragment
-            fragment?.addStamp(qrCode, findViewById(R.id.stampContainer))  // QRコードをフラグメントに渡す
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
+    private fun loadNumberArray(key: String): List<Int> {
+        val sharedPreferences: SharedPreferences = getSharedPreferences("Stamps", Context.MODE_PRIVATE)
+        val jsonString = sharedPreferences.getString(key, null) ?: return emptyList()
+        val jsonArray = JSONArray(jsonString)
+        val numbers = mutableListOf<Int>()
+        for (i in 0 until jsonArray.length()) {
+            numbers.add(jsonArray.getInt(i))
         }
-    }
-}
-*/
-
- */
-
-class QRCodeCaptureActivity : AppCompatActivity() {
-    private lateinit var capture: CaptureManager
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_qrcode)
-
-        val barcodeScannerView = findViewById<DecoratedBarcodeView>(R.id.qrcode_reader)
-
-        capture = CaptureManager(this, barcodeScannerView)
-        capture.initializeFromIntent(intent, savedInstanceState)
-        capture.decode() // QRコードのスキャンを開始
-    }
-
-    override fun onResume() {
-        super.onResume()
-        capture.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        capture.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        capture.onDestroy()
-    }
-
-    // QRコードスキャン結果を処理する
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null && result.contents != null) {
-            val qrCode = result.contents  // QRコードの内容を取得
-
-            // StampsFragmentのインスタンスにアクセスしてスタンプを追加
-            val fragment = supportFragmentManager.findFragmentById(R.id.stampContainer) as? StampsFragment
-            fragment?.addStamp(qrCode)
-            //fragment?.addStamp(qrCode, findViewById(R.id.stampContainer))  // QRコードをフラグメントに渡す
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+        return numbers
     }
 }
