@@ -63,13 +63,12 @@ class QRCodeCaptureActivity : AppCompatActivity() {
 
         // ZXing のスキャナを呼び出し、起動する
         IntentIntegrator(this).apply {
+            // 先ほど作成・修正した PortraitCaptureActivity を指定
             setCaptureActivity(PortraitCaptureActivity::class.java)
-            setOrientationLocked(true) // 画面回転をロックするかどうか
-            setPrompt("QRコードを読み取ってみよう！") // 下部に出るガイドテキスト
-            // setBeepEnabled(false)
-            // setBarcodeImageEnabled(true)
+            setOrientationLocked(true)
+            setPrompt("QRコードを読み取ってみよう！")
+            // 必要に応じてBeep音やバーコード画像の保存設定など
         }.also { integrator ->
-            Log.d("QRCodeCaptureActivity", "Launching QR Code scanner")
             qrCodeLauncher.launch(integrator.createScanIntent())
         }
     }
