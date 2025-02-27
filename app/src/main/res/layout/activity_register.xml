@@ -6,32 +6,67 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- メールアドレス入力欄 -->
     <EditText
         android:id="@+id/editregisterEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="メールアドレス"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp" />
 
-    <EditText
-        android:id="@+id/editregisterPassword"
+    <!-- パスワード入力欄＋表示切り替えアイコンを重ねる -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="パスワード"
-        android:inputType="textPassword"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp">
 
+        <EditText
+            android:id="@+id/editregisterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="パスワード"
+            android:inputType="textPassword"
+            android:minHeight="48dp" />
+
+        <ImageView
+            android:id="@+id/imageTogglePasswordRegister"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end|center_vertical"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:src="@drawable/eye_closed"
+            android:contentDescription="@string/password_toggle" />
+    </FrameLayout>
+
+    <!-- 名前入力欄 -->
     <EditText
         android:id="@+id/editrejisterName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="名前"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
+    <!-- 新規登録ボタン -->
     <Button
         android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="新規登録"/>
+        android:text="新規登録"
+        android:layout_marginBottom="16dp" />
+
+    <!-- すでにアカウントをお持ちですか？ ログインはこちら -->
+    <TextView
+        android:id="@+id/textGotoLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:clickable="true"
+        android:focusable="true"
+        android:autoLink="none"
+        android:textSize="16sp"
+        android:minHeight="48dp" />
+
 </LinearLayout>
