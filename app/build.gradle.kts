@@ -2,6 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
+    //id("com.android.application")
+
+    id("com.google.gms.google-services")
+
+    //id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -59,9 +64,16 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     kapt("com.github.bumptech.glide:compiler:4.12.0")
 
+    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
+    implementation("com.google.firebase:firebase-analytics")
 
+    //Firestore追加
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
+    //Fire-auth追加
+    implementation("com.google.firebase:firebase-auth-ktx")
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 }
+

@@ -20,11 +20,18 @@ class StoreAdapter(private val storeList: List<Store>) :
         val descriptionTextView: TextView = view.findViewById(R.id.storeDescription)
         val storeImageView: ImageView = view.findViewById(R.id.storeImage)
         val expandedLayout: View = view.findViewById(R.id.expandedLayout)
-        val toggleButton: TextView = view.findViewById(R.id.toggleButton) // 「詳細を見る/閉じる」用
-        val industriesTextView: TextView = view.findViewById(R.id.storeIndustries)
+        val toggleButton: TextView = view.findViewById(R.id.toggleButton)
+
+        // 業界表示用
+        val industryTextView: TextView = view.findViewById(R.id.storeIndustries)
+
+        // 会社の特徴表示用
+        val featuresTextView: TextView = view.findViewById(R.id.storeFeatures)
+
         val addressTextView: TextView = view.findViewById(R.id.storeAddress)
         val websiteTextView: TextView = view.findViewById(R.id.storeWebsite)
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoreViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -39,8 +46,8 @@ class StoreAdapter(private val storeList: List<Store>) :
         holder.nameTextView.text = store.name
         holder.descriptionTextView.text = store.description
         holder.storeImageView.setImageResource(store.imageResId)
-        holder.industriesTextView.text = "業種: ${store.industries}"
-        holder.industriesTextView.text = "会社の特徴: ${store.company_features}"
+        holder.industryTextView.text = "業種: ${store.industry}"
+        holder.featuresTextView.text = "会社の特徴: ${store.company_features}"
         holder.addressTextView.text = "住所: ${store.address}"
         holder.websiteTextView.text = "ホームページ: ${store.website_url}"
 

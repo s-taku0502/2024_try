@@ -5,7 +5,7 @@ import java.net.URL
 data class Store(
     val name: String,
     val description: String, // 例：○○の詳細情報
-    val industries: String, // 例：業界
+    val industry: String, // 例：業界
     val company_features: String, // 例：企業の特徴
     val address: String, // 例：住所
     val website_url: URL, // 例：ホームページURL

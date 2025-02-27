@@ -2,98 +2,118 @@ package com.example.nuka2024_try.ui.qr_scanner
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.zxing.integration.android.IntentIntegrator
 import com.google.zxing.integration.android.IntentResult
 import org.json.JSONArray
 
 class QRCodeCaptureActivity : AppCompatActivity() {
 
-    // ActivityResultLauncher を作成（スキャンアプリから結果を受け取る）
+    // ZXingのスキャン結果を受け取るランチャー
     private val qrCodeLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            Log.d("QRCodeCaptureActivity", "Activity result received: ${result.resultCode}")
-
             val intentData: Intent? = result.data
             val qrResult: IntentResult? = IntentIntegrator.parseActivityResult(
                 result.resultCode,
                 intentData
             )
-
             if (qrResult != null && qrResult.contents != null) {
                 val scannedCode = qrResult.contents
-                Log.d("QRCodeCaptureActivity", "QRコードを読み取ってみよう！: $scannedCode")
+                Log.d("QRCodeCaptureActivity", "読み取ったQRコード: $scannedCode")
 
-                // QRコードの文字列を Int に変換
-                val codeInt = try {
-                    scannedCode.toInt()
-                } catch (e: NumberFormatException) {
-                    // 数字でない場合は無効として扱う
-                    Toast.makeText(this, "このQRCodeは無効です", Toast.LENGTH_LONG).show()
-                    finish()
-                    return@registerForActivityResult
-                }
+                // スタンプコードをSharedPreferencesに保存
+                saveStampCode(scannedCode)
 
-                val shiftedIndex = codeInt - 1
+                // Firestoreへも保存
+                saveStampToFirestore(scannedCode)
 
-                if (shiftedIndex >= 0) {
-                    // スタンプの保存
-                    saveStamp(shiftedIndex)
-                    Toast.makeText(this, "取得したQRコードはこちらです→: $scannedCode", Toast.LENGTH_LONG).show()
-                } else {
-                    // 0未満なら無効として扱う
-                    Toast.makeText(this, "このQRCodeは無効です: $scannedCode", Toast.LENGTH_LONG).show()
-                }
-                finish()
+                finish()  // スキャナ画面を閉じてStampsFragmentへ戻る想定
             } else {
-                Toast.makeText(this, "No QR Code detected.", Toast.LENGTH_SHORT).show()
-                Log.d("QRCodeCaptureActivity", "QR Code contents were null or scanning was canceled.")
+                Toast.makeText(this, "QRコードが検出されませんでした", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 画面レイアウトを表示したい場合は setContentView(R.layout.fragment_qrcode) を使う
-        // setContentView(R.layout.fragment_qrcode)
 
-        // ZXing のスキャナを呼び出し、起動する
+        // ZXingのスキャナを起動
         IntentIntegrator(this).apply {
-            // 先ほど作成・修正した PortraitCaptureActivity を指定
-            setCaptureActivity(PortraitCaptureActivity::class.java)
+            setCaptureActivity(PortraitCaptureActivity::class.java) // 縦画面用のActivityがあるなら指定
             setOrientationLocked(true)
             setPrompt("QRコードを読み取ってみよう！")
-            // 必要に応じてBeep音やバーコード画像の保存設定など
         }.also { integrator ->
             qrCodeLauncher.launch(integrator.createScanIntent())
         }
     }
 
     /**
-     * スタンプをSharedPreferencesに保存する
+     * SharedPreferencesにスタンプコードを保存
+     * （既存のローカル保存機能）
      */
-    private fun saveStamp(index: Int) {
-        Log.d("QRCodeCaptureActivity", "Saving stamp: $index")
-        val sharedPreferences = getSharedPreferences("Stamps", Context.MODE_PRIVATE)
-        val currentData = loadNumberArray("stamps").toMutableSet()
-        currentData.add(index)
-        val jsonArray = JSONArray(currentData.toList())
-        sharedPreferences.edit().putString("stamps", jsonArray.toString()).apply()
-        Log.d("QRCodeCaptureActivity", "Stamp saved: $jsonArray")
+    private fun saveStampCode(newCode: String) {
+        val sharedPref = getSharedPreferences("Stamps", Context.MODE_PRIVATE)
+        val currentList = loadStringArray("stamps").toMutableList()
+
+        if (currentList.contains(newCode)) {
+            // 既にある数字なら追加しない
+            Toast.makeText(this, "このスタンプは取得済みです: $newCode", Toast.LENGTH_SHORT).show()
+        } else {
+            // 新しい数字ならリストに追加
+            currentList.add(newCode)
+            Toast.makeText(this, "新しいスタンプを追加しました: $newCode", Toast.LENGTH_SHORT).show()
+        }
+
+        // JSON配列として保存
+        val jsonArray = JSONArray(currentList)
+        sharedPref.edit()
+            .putString("stamps", jsonArray.toString())
+            .apply()
     }
 
-    private fun loadNumberArray(key: String): List<Int> {
-        val sharedPreferences: SharedPreferences = getSharedPreferences("Stamps", Context.MODE_PRIVATE)
-        val jsonString = sharedPreferences.getString(key, null) ?: return emptyList()
+    /**
+     * Firestoreの "stamps" コレクションにスタンプを保存
+     * （今回追加する新機能）
+     */
+    private fun saveStampToFirestore(newCode: String) {
+        val db = Firebase.firestore
+
+        // 例として「ドキュメントID = スタンプコード」とし、
+        // "description", "imageUrl" などを仮で登録してみる
+        val stampData = mapOf(
+            "id" to newCode,
+            "description" to "スキャンしたスタンプ: $newCode",
+            "imageUrl" to "circle_app_icon" // Firestore画面の例に合わせたIDなど
+        )
+
+        db.collection("stamps")
+            .document(newCode)   // ドキュメントIDをスタンプコードに
+            .set(stampData)
+            .addOnSuccessListener {
+                Log.d("QRCodeCaptureActivity", "Firestoreにスタンプを保存: $newCode")
+            }
+            .addOnFailureListener { e ->
+                Log.e("QRCodeCaptureActivity", "Firestore保存失敗: $newCode", e)
+            }
+    }
+
+    /**
+     * JSON配列を読み込んでリストへ
+     */
+    private fun loadStringArray(key: String): List<String> {
+        val sharedPref = getSharedPreferences("Stamps", Context.MODE_PRIVATE)
+        val jsonString = sharedPref.getString(key, null) ?: return emptyList()
         val jsonArray = JSONArray(jsonString)
-        val numbers = mutableListOf<Int>()
+        val result = mutableListOf<String>()
         for (i in 0 until jsonArray.length()) {
-            numbers.add(jsonArray.getInt(i))
+            result.add(jsonArray.getString(i))
         }
-        return numbers
+        return result
     }
 }

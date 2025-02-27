@@ -31,6 +31,7 @@ class QR_Scanner_Main : AppCompatActivity() {
     }
 
     // QRスキャン結果の処理
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("呼ばれた","call!!!")

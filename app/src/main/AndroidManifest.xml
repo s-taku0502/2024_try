@@ -21,6 +21,16 @@
         android:theme="@style/Theme.Nuka2024_try"
         tools:targetApi="31">
 
+        <!-- アプリ起動時に表示する画面を LaunchActivity に変更 -->
+        <activity
+            android:name=".ui.auth.LaunchActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
         <!-- 立ち上げ画面(メイン) -->
         <activity
             android:name=".MainActivity"
@@ -51,6 +61,18 @@
              - configChanges="orientation|keyboardHidden" で画面回転イベントなどで再生成を防止
              - theme や label が不要なら省略でもOK
         -->
+        <!-- 追加: LoginActivity の宣言 -->
+
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Nuka2024_try.NoActionBar"/>
+
+        <!-- 必要に応じて、RegisterActivity も追加 -->
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Nuka2024_try.NoActionBar"/>
 
     </application>
 

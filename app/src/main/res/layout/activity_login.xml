@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- メールアドレス入力欄 -->
+    <EditText
+        android:id="@+id/editloginEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="メールアドレス"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="8dp"
+        android:minHeight="48dp" />
+
+    <!-- パスワード入力欄＋目のマークを重ねる -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <!-- パスワード入力欄 (横幅いっぱい) -->
+        <EditText
+            android:id="@+id/editloginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="パスワード"
+            android:inputType="textPassword"
+            android:minHeight="48dp" />
+
+        <!-- 目のマーク (アイコン) -->
+        <ImageView
+            android:id="@+id/imageTogglePassword"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end|center_vertical"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:src="@drawable/eye_closed"
+            android:contentDescription="@string/password_toggle" />
+    </FrameLayout>
+
+    <!-- ログインボタン -->
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ログイン"
+        android:layout_marginBottom="16dp" />
+
+    <!-- パスワード再設定用 (クリック可能) -->
+    <TextView
+        android:id="@+id/textForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="パスワードを忘れた場合は、こちらより再設定の申請をしてください。"
+        android:textColor="@android:color/holo_blue_dark"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginBottom="8dp"
+        android:minHeight="48dp" />
+
+    <!-- 新規登録用 (クリック可能) -->
+    <TextView
+        android:id="@+id/textRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="アカウントをお持ちでない場合は、こちらより登録してください。"
+        android:textColor="@android:color/holo_blue_dark"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="48dp" />
+
+</LinearLayout>

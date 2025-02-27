@@ -6,23 +6,20 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
-import android.text.style.BackgroundColorSpan
-import android.text.style.StyleSpan
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.nuka2024_try.databinding.FragmentHomeBinding
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -30,62 +27,80 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView_1: TextView = binding.textHome
+        // --- 上部バナー部分のテキスト設定 ---
+        val bannerText = "額地区スタンプらり～\nスタンプらり～を活用して、商店街を周ろう！"
+        val spannable = SpannableString(bannerText)
+        // 「スタンプらり～」部分を20spに設定 (indices 0～10)
+        spannable.setSpan(AbsoluteSizeSpan(20, true), 0, 10, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        // 「商店街を周ろう！」部分を18spに設定 (indices 24～32)
+        spannable.setSpan(AbsoluteSizeSpan(18, true), 24, 32, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        val spannable_1 = SpannableString("額地区スタンプらり～\nスタンプらり～を活用して、商店街を周ろう！")
+        binding.textHome.text = spannable
+        binding.textHome.setTextColor(Color.BLACK)
 
-    // "スタンプらり～" のサイズを20spに設定
+        // --- Firestoreから「news」コレクションのデータを取得 ---
+        val newsContainer = binding.newsContainer
+        val db = Firebase.firestore
 
-        spannable_1.setSpan(StyleSpan(Typeface.BOLD), 0, 10, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        spannable_1.setSpan(AbsoluteSizeSpan(20, true), 0, 10, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        db.collection("news")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    // Firebase上のフィールド名に合わせて取得
+                    val endData = document.getString("endDate") ?: ""
+                    val content = document.getString("content") ?: ""
 
-    // "商店街をまわろう！" のサイズを18spに設定
+                    // お知らせ1件のレイアウト
+                    val itemLayout = LinearLayout(requireContext()).apply {
+                        orientation = LinearLayout.VERTICAL
+                        setPadding(16, 16, 16, 16)
+                    }
 
-        spannable_1.setSpan(AbsoluteSizeSpan(18, true), 11, spannable_1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    // 1. 日付のTextView（太字にするとより分かりやすい）
+                    val dateTextView = TextView(requireContext()).apply {
+                        text = endData
+                        textSize = 16f
+                        setTypeface(typeface, Typeface.BOLD) // 太字
+                        setTextColor(Color.BLACK)
+                    }
 
-        textView_1.setTextColor(Color.BLACK)
-        textView_1.gravity = Gravity.CENTER  // テキストを中央揃えに設定
+                    // 2. お知らせ内容のTextView
+                    val contentTextView = TextView(requireContext()).apply {
+                        text = content
+                        textSize = 14f
+                        setTextColor(Color.DKGRAY)
+                    }
 
+                    // レイアウトに追加
+                    itemLayout.addView(dateTextView)
+                    itemLayout.addView(contentTextView)
 
-        textView_1.text = spannable_1
+                    // 3. 区切り線（divider）を追加して見やすく
+                    val dividerView = View(requireContext()).apply {
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            2 // 高さ2px
+                        )
+                        setBackgroundColor(Color.LTGRAY)
+                    }
 
-
-        //  引用文の作成
-
-
-        // val textView_2: TextView = binding.textQuote
-
-        val quoteText = SpannableString("")
-
-    // 引用文に背景色を設定
-        quoteText.setSpan(BackgroundColorSpan(Color.LTGRAY), 0, quoteText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-    // イタリックに設定
-        quoteText.setSpan(StyleSpan(Typeface.ITALIC), 0, quoteText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-    /* パディングはTextViewで設定
-        textView_2.setPadding(16, 16, 16, 16)
-        textView_2.text = quoteText */
+                    // お知らせレイアウトを newsContainer に追加
+                    newsContainer.addView(itemLayout)
+                    newsContainer.addView(dividerView)
+                }
+            }
+            .addOnFailureListener { e ->
+                e.printStackTrace()
+            }
 
         return root
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
-/*
-class home_image{
-
-}*/
-
