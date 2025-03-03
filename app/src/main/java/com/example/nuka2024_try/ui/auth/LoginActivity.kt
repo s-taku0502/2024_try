@@ -25,14 +25,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var buttonLogin: Button
     private lateinit var textForgotPassword: TextView
     private lateinit var textRegister: TextView
-
-    // 画像で表示/非表示を切り替えるための ImageView
     private lateinit var imageTogglePassword: ImageView
 
-    // パスワードが表示されているかどうかのフラグ
     private var isPasswordVisible = false
-
-    // SharedPreferences (自動入力のため)
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +44,9 @@ class LoginActivity : AppCompatActivity() {
 
         // SharedPreferences の初期化
         sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE)
-
-        // 保存してあるメールアドレス＆パスワードを自動入力
         loadSavedCredentials()
 
-        // パスワード表示/非表示切り替え処理 (画像だけ)
+        // パスワード表示/非表示切り替え
         imageTogglePassword.setOnClickListener {
             togglePasswordVisibility()
         }
@@ -70,22 +63,60 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        // 「パスワードを忘れた場合は～」をタップした時の処理
-        textForgotPassword.setOnClickListener {
-            Toast.makeText(this, "パスワード再設定画面へ遷移", Toast.LENGTH_SHORT).show()
-        }
+        // 「パスワードを忘れた場合は～」のテキスト装飾を設定
+        setupForgotPasswordText()
 
-        // 以下で「textRegister」に部分的な装飾を設定
+        // 「アカウントをお持ちでない場合は～」のテキスト装飾を設定
         setupRegisterText()
     }
 
-    // RegisterActivity へ遷移するためのテキスト装飾を設定
+    /**
+     * 「パスワードを忘れた場合は、  こちら  より再設定の申請をしてください。」を部分装飾し、
+     * タップ時にパスワード再設定画面(PasswordResetActivity)へ遷移する
+     */
+    private fun setupForgotPasswordText() {
+        val fullText = "パスワードを忘れた場合は、  こちら  より再設定の申請をしてください。"
+        val spannable = SpannableStringBuilder(fullText)
+
+        val target = "こちら"
+        val startIndex = fullText.indexOf(target)
+        val endIndex = startIndex + target.length
+
+        if (startIndex != -1) {
+            // 下線を付与
+            spannable.setSpan(
+                UnderlineSpan(),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            // クリック時の動作
+            val clickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    // パスワード再設定画面へ遷移
+                    val intent = Intent(this@LoginActivity, PasswordResetActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            spannable.setSpan(
+                clickableSpan,
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        textForgotPassword.text = spannable
+        textForgotPassword.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    /**
+     * 「アカウントをお持ちでない場合は、  こちら  より登録してください。」を部分装飾
+     */
     private fun setupRegisterText() {
-        // 全体の文章。前後に余白を含む
         val fullText = "アカウントをお持ちでない場合は、  こちら  より登録してください。"
         val spannable = SpannableStringBuilder(fullText)
 
-        // 「こちら」という部分の開始・終了位置を取得
         val target = "こちら"
         val startIndex = fullText.indexOf(target)
         val endIndex = startIndex + target.length
@@ -113,9 +144,8 @@ class LoginActivity : AppCompatActivity() {
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-        // TextViewに設定
+
         textRegister.text = spannable
-        // クリックを有効にするために必要
         textRegister.movementMethod = LinkMovementMethod.getInstance()
     }
 
@@ -127,8 +157,6 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     Toast.makeText(this, "ログイン成功: ${user?.email}", Toast.LENGTH_SHORT).show()
-
-                    // 自動入力用にメール＆パスワードを保存
                     saveCredentials(email, password)
 
                     // ログイン後はホーム画面(MainActivity)へ遷移
