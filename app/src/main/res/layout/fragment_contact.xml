@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- お問い合わせの種類 (Spinner) -->
+        <Spinner
+            android:id="@+id/spinnerContactType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <!-- ユーザー名入力欄 -->
+        <EditText
+            android:id="@+id/editContactUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ユーザー名"
+            android:layout_marginBottom="16dp" />
+
+        <!-- メールアドレス入力欄 -->
+        <EditText
+            android:id="@+id/editContactEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="メールアドレス"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="16dp" />
+
+        <!-- お問い合わせ内容 (複数行) -->
+        <EditText
+            android:id="@+id/editContactContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="お問い合わせ内容"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:lines="5"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 送信ボタン -->
+        <Button
+            android:id="@+id/buttonSendContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="送信" />
+
+    </LinearLayout>
+</ScrollView>

@@ -36,6 +36,12 @@
         tools:layout="@layout/fragment_stores" />
 
     <fragment
+        android:id="@+id/nav_contact"
+        android:name="com.example.nuka2024_try.ui.contact.ContactFragment"
+        android:label="お問い合わせフォーム"
+        tools:layout="@layout/fragment_contact" />
+
+    <fragment
         android:id="@+id/nav_Email"
         android:name="com.example.nuka2024_try.ui.qr_scanner.ScannersFragment"
         android:label="Setting"
@@ -46,7 +52,6 @@
         android:name="com.example.nuka2024_try.ui.qr_scanner.ScannersFragment"
         android:label="Setting"
         tools:layout="@layout/activity_setting" />
-
 
 </navigation>
 

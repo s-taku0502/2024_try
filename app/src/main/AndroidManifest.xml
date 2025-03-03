@@ -37,10 +37,12 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Nuka2024_try.NoActionBar">
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
 
         <!-- 既存: ZXing のスキャナを起動する Activity -->
@@ -73,6 +75,13 @@
             android:name=".ui.auth.RegisterActivity"
             android:exported="true"
             android:theme="@style/Theme.Nuka2024_try.NoActionBar"/>
+
+        <!-- ▼▼ ここに ContactActivity を追加 ▼▼ -->
+        <activity
+            android:name=".ui.contact.ContactFragment"
+            android:exported="true"
+            android:theme="@style/Theme.Nuka2024_try.NoActionBar"/>
+        <!-- ▲▲ 追加ここまで ▲▲ -->
 
     </application>
 

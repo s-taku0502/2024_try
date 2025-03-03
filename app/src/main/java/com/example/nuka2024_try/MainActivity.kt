@@ -12,10 +12,9 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.nuka2024_try.databinding.ActivityMainBinding
+import com.example.nuka2024_try.ui.contact.ContactFragment
 import com.example.nuka2024_try.ui.qr_scanner.QRCodeCaptureActivity
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,15 +24,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ※ ここでは、ユーザー登録・ログイン後にMainActivityが起動する前提としています。
-        // Firebase Authentication による認証状態のチェックは、起動画面やLaunchActivityで行う想定です。
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
+        binding.appBarMain.fab.setOnClickListener {
             Toast.makeText(this, "Fab clicked", Toast.LENGTH_SHORT).show()
         }
 
@@ -41,22 +37,26 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
 
-        // ナビゲーションドロワーのトップレベルの目的地を設定
+        // トップレベルの目的地に nav_home, nav_stamps, nav_contact を指定
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.nav_home, R.id.nav_stamps), drawerLayout
+            setOf(R.id.nav_home, R.id.nav_stamps, R.id.nav_contact), drawerLayout
         )
 
-        // アクションバーとナビゲーションコントローラを連携
         setupActionBarWithNavController(navController, appBarConfiguration)
-        // NavigationViewとNavControllerを連携
         navView.setupWithNavController(navController)
 
-        // メニューアイテムの選択リスナー
+        // メニューアイテムの選択リスナーに nav_contact の処理を追加
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_scan -> {
                     Toast.makeText(this, "QRスキャンのアクティビティを起動します", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, QRCodeCaptureActivity::class.java))
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.nav_contact -> {
+                    // お問い合わせフォーム画面 (ContactFragment) へ遷移
+                    navController.navigate(R.id.nav_contact)
                     drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
