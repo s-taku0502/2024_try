@@ -13,14 +13,16 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- 店舗名を表示する TextView (storeName) -->
         <TextView
-            android:id="@+id/textCompanyName"
+            android:id="@+id/textStoreName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="会社名"
+            android:text="店舗名"
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <!-- クーポンタイトル -->
         <TextView
             android:id="@+id/textCouponTitle"
             android:layout_width="wrap_content"
@@ -30,6 +32,7 @@
             android:textStyle="bold"
             android:paddingTop="4dp" />
 
+        <!-- 割引内容 -->
         <TextView
             android:id="@+id/textCouponDiscount"
             android:layout_width="wrap_content"
@@ -39,15 +42,17 @@
             android:textColor="@android:color/holo_green_dark"
             android:paddingTop="4dp" />
 
+        <!-- limitフィールドを表示する箇所 -->
         <TextView
-            android:id="@+id/textCouponExpiration"
+            android:id="@+id/textCouponLimit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="有効期限"
+            android:text="クーポン期限"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:paddingTop="4dp" />
 
+        <!-- クーポンを使用するボタン -->
         <Button
             android:id="@+id/buttonUseCoupon"
             android:layout_width="match_parent"

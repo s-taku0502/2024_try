@@ -10,14 +10,16 @@ import com.example.nuka2024_try.R
 
 class CouponAdapter(
     private val coupons: List<Coupon>,
-    private val onUseButtonClicked: (position: Int) -> Unit
+    private val onUseButtonClicked: (coupon: Coupon) -> Unit
 ) : RecyclerView.Adapter<CouponAdapter.CouponViewHolder>() {
 
     class CouponViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val companyName: TextView = view.findViewById(R.id.textCompanyName)
+        // 店舗名表示用の TextView
+        val storeName: TextView = view.findViewById(R.id.textStoreName)
+        // クーポンタイトル
         val title: TextView = view.findViewById(R.id.textCouponTitle)
         val discount: TextView = view.findViewById(R.id.textCouponDiscount)
-        val expiration: TextView = view.findViewById(R.id.textCouponExpiration)
+        val limit: TextView = view.findViewById(R.id.textCouponLimit)
         val useButton: Button = view.findViewById(R.id.buttonUseCoupon)
     }
 
@@ -28,10 +30,19 @@ class CouponAdapter(
 
     override fun onBindViewHolder(holder: CouponViewHolder, position: Int) {
         val coupon = coupons[position]
-        holder.companyName.text = coupon.companyName
+
+        // 店舗名を表示
+        holder.storeName.text = coupon.storeName
+        // クーポンタイトルを表示
         holder.title.text = coupon.title
         holder.discount.text = coupon.discount
-        holder.expiration.text = coupon.expiration
+
+        // Date? を文字列に変換して表示 (Timestamp -> Date -> String)
+        val formattedDate = coupon.limit?.let {
+            val sdf = java.text.SimpleDateFormat("yyyy年M月d日 HH:mm:ss", java.util.Locale.getDefault())
+            sdf.format(it)
+        } ?: ""
+        holder.limit.text = formattedDate
 
         if (coupon.isUsed) {
             holder.useButton.text = "使用済み"
@@ -40,10 +51,11 @@ class CouponAdapter(
             holder.useButton.text = "クーポンを使用する"
             holder.useButton.isEnabled = true
             holder.useButton.setOnClickListener {
-                onUseButtonClicked(position)
+                onUseButtonClicked(coupon)
             }
         }
     }
 
     override fun getItemCount() = coupons.size
 }
+

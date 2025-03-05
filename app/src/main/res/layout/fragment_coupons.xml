@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.coupons.CouponsFragment">
 
+    <!-- クーポン一覧を表示する RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCoupons"
         android:layout_width="match_parent"
@@ -14,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_coupon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

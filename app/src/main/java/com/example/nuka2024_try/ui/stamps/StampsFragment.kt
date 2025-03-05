@@ -1,7 +1,5 @@
 package com.example.nuka2024_try.ui.stamps
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +13,6 @@ import com.google.android.flexbox.JustifyContent
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.json.JSONArray
 
 class StampsFragment : Fragment() {
 
@@ -29,65 +26,40 @@ class StampsFragment : Fragment() {
         val stampTextView = view.findViewById<TextView>(R.id.stampCountTextView)
         val stampContainer = view.findViewById<FlexboxLayout>(R.id.stampContainer)
 
-        // FlexboxLayoutの子ビューを左揃えに設定
+        // FlexboxLayoutの子ビューを左揃えにする
         stampContainer.justifyContent = JustifyContent.FLEX_START
 
-        // SharedPreferencesからローカルのスタンプコードを読み込み
-        val localCodes = loadStringArray("stamps")
-
-        val currentUser = Firebase.auth.currentUser
-        if (currentUser == null) {
-            // 未ログインの場合はローカルのみ表示
-            val sortedLocal = localCodes.mapNotNull { it.toIntOrNull() }
-                .sorted()
-                .map { it.toString() }
-            stampTextView.text = "スタンプ：${sortedLocal.size}"
-            for (code in sortedLocal) {
-                val stampItemView = inflater.inflate(R.layout.item_single_stamp, stampContainer, false)
-                val stampImage = stampItemView.findViewById<ImageView>(R.id.stampImage)
-                val stampLabel = stampItemView.findViewById<TextView>(R.id.stampLabel)
-                stampImage.setImageResource(R.drawable.app_icon)
-                stampLabel.text = code
-                stampContainer.addView(stampItemView)
-            }
-            return view
-        }
-
-        // ログイン中ユーザーの uid を利用して Firestore からスタンプを取得
-        val uid = currentUser.uid
         val db = Firebase.firestore
+        val auth = Firebase.auth
+        val userId = auth.currentUser?.uid ?: return view // ログインしていない場合は何も表示しない
+
+        // ここを "users/{userId}/stamps" ではなく "stamps/{userId}/codes" に変更
         db.collection("stamps")
-            .document(uid)
+            .document(userId)
             .collection("codes")
             .get()
             .addOnSuccessListener { result ->
-                val firestoreCodes = mutableListOf<String>()
-                for (doc in result) {
-                    val code = doc.getString("id") ?: ""
-                    if (code.isNotEmpty()) {
-                        firestoreCodes.add(code)
-                    }
+                // 取得したスタンプコードをリスト化
+                val codes = result.documents.map { doc ->
+                    doc.id  // または doc.getString("id") ?: doc.id
                 }
 
-                // ローカルとFirestoreのコードをマージ（重複除外）
-                val allCodes = (localCodes + firestoreCodes).distinct()
-
-                // 数値としてソート
-                val sortedCodes = allCodes
-                    .mapNotNull { it.toIntOrNull() }
-                    .sorted()
-                    .map { it.toString() }
-
                 // スタンプ数を表示
-                stampTextView.text = "スタンプ：${sortedCodes.size}"
+                stampTextView.text = "スタンプ：${codes.size}"
 
-                // FlexboxLayoutにスタンプアイテムを追加
+                // 既存の子ビューをクリアしてから追加
                 stampContainer.removeAllViews()
-                for (code in sortedCodes) {
+
+                // 各スタンプコードを画面に表示
+                for (code in codes) {
                     val stampItemView = inflater.inflate(R.layout.item_single_stamp, stampContainer, false)
                     val stampImage = stampItemView.findViewById<ImageView>(R.id.stampImage)
                     val stampLabel = stampItemView.findViewById<TextView>(R.id.stampLabel)
+
+                    // Firestoreに "imageUrl" フィールドがあれば取得して
+                    // Glide などで表示可能（ここでは簡単のため固定アイコン）
                     stampImage.setImageResource(R.drawable.app_icon)
+
                     stampLabel.text = code
                     stampContainer.addView(stampItemView)
                 }
@@ -97,21 +69,5 @@ class StampsFragment : Fragment() {
             }
 
         return view
-    }
-
-    /**
-     * SharedPreferences ("Stamps") の "stamps"キーに保存された
-     * JSON配列をStringのリストとして読み込む
-     */
-    private fun loadStringArray(key: String): List<String> {
-        val sharedPref: SharedPreferences =
-            requireContext().getSharedPreferences("Stamps", Context.MODE_PRIVATE)
-        val jsonString = sharedPref.getString(key, null) ?: return emptyList()
-        val jsonArray = JSONArray(jsonString)
-        val result = mutableListOf<String>()
-        for (i in 0 until jsonArray.length()) {
-            result.add(jsonArray.getString(i))
-        }
-        return result
     }
 }

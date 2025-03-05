@@ -16,6 +16,7 @@ import com.example.nuka2024_try.MainActivity
 import com.example.nuka2024_try.R
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : AppCompatActivity() {
@@ -68,7 +69,6 @@ class RegisterActivity : AppCompatActivity() {
 
     // 「すでにアカウントをお持ちですか？  ログインはこちら」の装飾・クリック設定
     private fun setupGotoLoginText() {
-        // 全体の文章に余白を含めて、「ログインはこちら」部分を探す
         val fullText = "すでにアカウントをお持ちですか？　 ログインはこちら"
         val spannable = SpannableStringBuilder(fullText)
 
@@ -90,7 +90,7 @@ class RegisterActivity : AppCompatActivity() {
                     // LoginActivity へ遷移
                     val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                     startActivity(intent)
-                    finish() // 戻る操作で二重になるのを防ぐ場合はfinish()してもOK
+                    finish()
                 }
             }
             spannable.setSpan(
@@ -122,13 +122,18 @@ class RegisterActivity : AppCompatActivity() {
         editregisterPassword.setSelection(editregisterPassword.text.length)
     }
 
+    /**
+     * ユーザー登録（Firebase Authentication）に成功した後、
+     * Firestore の "users" コレクションにユーザー情報を追加する処理
+     */
     private fun registerUser(email: String, password: String, name: String) {
         val auth = Firebase.auth
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // ユーザー登録成功時の処理
+                    // ユーザー登録成功時
                     val user = auth.currentUser
+
                     // 表示名（名前）の設定（任意）
                     val profileUpdates = UserProfileChangeRequest.Builder()
                         .setDisplayName(name)
@@ -137,9 +142,30 @@ class RegisterActivity : AppCompatActivity() {
 
                     Toast.makeText(this, "登録完了: ${user?.email}", Toast.LENGTH_SHORT).show()
 
-                    // 登録後はホーム画面(MainActivity)へ遷移
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    // Firestore へユーザー情報を書き込む
+                    user?.uid?.let { uid ->
+                        val db = Firebase.firestore
+                        val userData = mapOf(
+                            "name" to name,
+                            "email" to email,
+                            "createdAt" to com.google.firebase.Timestamp.now()
+                        )
+                        db.collection("users")
+                            .document(uid)
+                            .set(userData)
+                            .addOnSuccessListener {
+                                // Firestore 書き込み成功後にホーム画面へ遷移
+                                startActivity(Intent(this, MainActivity::class.java))
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Firestore書き込み失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    } ?: run {
+                        // 万が一 user が null の場合はそのまま遷移
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
                 } else {
                     Toast.makeText(this, "登録失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
