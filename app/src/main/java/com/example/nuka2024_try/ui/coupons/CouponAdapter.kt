@@ -14,7 +14,7 @@ class CouponAdapter(
 ) : RecyclerView.Adapter<CouponAdapter.CouponViewHolder>() {
 
     class CouponViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        // 店舗名表示用の TextView
+        // 店舗名表示用の TextView\
         val storeName: TextView = view.findViewById(R.id.textStoreName)
         // クーポンタイトル
         val title: TextView = view.findViewById(R.id.textCouponTitle)

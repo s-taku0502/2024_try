@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.nuka2024_try.MainActivity
 import com.example.nuka2024_try.R
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
@@ -83,27 +85,14 @@ class LoginActivity : AppCompatActivity() {
         val endIndex = startIndex + target.length
 
         if (startIndex != -1) {
-            // 下線を付与
-            spannable.setSpan(
-                UnderlineSpan(),
-                startIndex,
-                endIndex,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            // クリック時の動作
+            spannable.setSpan(UnderlineSpan(), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    // パスワード再設定画面へ遷移
                     val intent = Intent(this@LoginActivity, PasswordResetActivity::class.java)
                     startActivity(intent)
                 }
             }
-            spannable.setSpan(
-                clickableSpan,
-                startIndex,
-                endIndex,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            spannable.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         textForgotPassword.text = spannable
@@ -122,27 +111,14 @@ class LoginActivity : AppCompatActivity() {
         val endIndex = startIndex + target.length
 
         if (startIndex != -1) {
-            // 下線を付与
-            spannable.setSpan(
-                UnderlineSpan(),
-                startIndex,
-                endIndex,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            // クリック時の動作を付与
+            spannable.setSpan(UnderlineSpan(), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    // RegisterActivity へ遷移
                     val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
                     startActivity(intent)
                 }
             }
-            spannable.setSpan(
-                clickableSpan,
-                startIndex,
-                endIndex,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            spannable.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         textRegister.text = spannable
@@ -159,9 +135,45 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "ログイン成功: ${user?.email}", Toast.LENGTH_SHORT).show()
                     saveCredentials(email, password)
 
-                    // ログイン後はホーム画面(MainActivity)へ遷移
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    // ★ Firestoreからユーザードキュメントを取得して確認
+                    user?.uid?.let { uid ->
+                        val db = Firebase.firestore
+                        val userDocRef = db.collection("users").document(uid)
+                        userDocRef.get()
+                            .addOnSuccessListener { document ->
+                                if (document != null && document.exists()) {
+                                    // ここで stamps の内容を確認したり、初期化処理を行うなどが可能
+                                    // val stamps = document.get("stamps") as? List<String> ?: emptyList()
+
+                                    // ログイン後はホーム画面(MainActivity)へ遷移
+                                    startActivity(Intent(this, MainActivity::class.java))
+                                    finish()
+                                } else {
+                                    // もしユーザードキュメントが存在しない場合、作成するなどの対応
+                                    val defaultData = mapOf(
+                                        "name" to user.displayName.orEmpty(),
+                                        "email" to user.email.orEmpty(),
+                                        "stamps" to emptyList<String>()  // 空配列
+                                    )
+                                    userDocRef.set(defaultData)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(this, "ユーザーデータを新規作成しました", Toast.LENGTH_SHORT).show()
+                                            startActivity(Intent(this, MainActivity::class.java))
+                                            finish()
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Toast.makeText(this, "ユーザーデータ作成失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+                                        }
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "ユーザーデータ取得失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    } ?: run {
+                        // userがnullの場合は直接MainActivityへ
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
                 } else {
                     Toast.makeText(this, "ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }

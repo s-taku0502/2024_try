@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.nuka2024_try.R
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.flexbox.JustifyContent
@@ -26,42 +27,61 @@ class StampsFragment : Fragment() {
         val stampTextView = view.findViewById<TextView>(R.id.stampCountTextView)
         val stampContainer = view.findViewById<FlexboxLayout>(R.id.stampContainer)
 
-        // FlexboxLayoutの子ビューを左揃えにする
+        // 左揃えに設定
         stampContainer.justifyContent = JustifyContent.FLEX_START
 
         val db = Firebase.firestore
         val auth = Firebase.auth
-        val userId = auth.currentUser?.uid ?: return view // ログインしていない場合は何も表示しない
+        val user = auth.currentUser ?: return view
+        val email = user.email ?: return view
 
-        // ここを "users/{userId}/stamps" ではなく "stamps/{userId}/codes" に変更
-        db.collection("stamps")
-            .document(userId)
-            .collection("codes")
+        // currentStamps/{email} のドキュメントを取得
+        db.collection("currentStamps")
+            .document(email)
             .get()
-            .addOnSuccessListener { result ->
-                // 取得したスタンプコードをリスト化
-                val codes = result.documents.map { doc ->
-                    doc.id  // または doc.getString("id") ?: doc.id
+            .addOnSuccessListener { doc ->
+                if (!doc.exists()) {
+                    // スタンプがない場合
+                    stampTextView.text = "スタンプ：0"
+                    return@addOnSuccessListener
                 }
+                // doc.data は { "circle_app_icon": true, "sample": true, ... } となる
+                val dataMap = doc.data ?: emptyMap<String, Any>()
+                val stampCodes = dataMap.keys.toList()
+                stampTextView.text = "スタンプ：${stampCodes.size}"
 
-                // スタンプ数を表示
-                stampTextView.text = "スタンプ：${codes.size}"
-
-                // 既存の子ビューをクリアしてから追加
+                // 既存のビューをクリア
                 stampContainer.removeAllViews()
 
-                // 各スタンプコードを画面に表示
-                for (code in codes) {
-                    val stampItemView = inflater.inflate(R.layout.item_single_stamp, stampContainer, false)
-                    val stampImage = stampItemView.findViewById<ImageView>(R.id.stampImage)
-                    val stampLabel = stampItemView.findViewById<TextView>(R.id.stampLabel)
+                // 各スタンプコードについて、stamps コレクションから情報を取得して表示
+                for (code in stampCodes) {
+                    db.collection("stamps")
+                        .document(code)
+                        .get()
+                        .addOnSuccessListener { stampDoc ->
+                            val stampItemView = inflater.inflate(R.layout.item_single_stamp, stampContainer, false)
+                            val stampImage = stampItemView.findViewById<ImageView>(R.id.stampImage)
+                            val stampLabel = stampItemView.findViewById<TextView>(R.id.stampLabel)
 
-                    // Firestoreに "imageUrl" フィールドがあれば取得して
-                    // Glide などで表示可能（ここでは簡単のため固定アイコン）
-                    stampImage.setImageResource(R.drawable.app_icon)
+                            // stamps ドキュメントの情報を取得
+                            val stampId = stampDoc.getString("id") ?: code
+                            val imageUrl = stampDoc.getString("imageUrl") ?: ""
+                            stampLabel.text = stampId
 
-                    stampLabel.text = code
-                    stampContainer.addView(stampItemView)
+                            if (imageUrl.isNotEmpty()) {
+                                Glide.with(this)
+                                    .load(imageUrl)
+                                    .placeholder(R.drawable.app_icon)
+                                    .error(R.drawable.app_icon)
+                                    .into(stampImage)
+                            } else {
+                                stampImage.setImageResource(R.drawable.app_icon)
+                            }
+                            stampContainer.addView(stampItemView)
+                        }
+                        .addOnFailureListener { e ->
+                            e.printStackTrace()
+                        }
                 }
             }
             .addOnFailureListener { e ->

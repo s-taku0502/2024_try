@@ -26,12 +26,11 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var editregisterName: EditText
     private lateinit var buttonRegister: Button
 
-    // 表示/非表示を切り替える ImageView
+    // パスワード表示/非表示を切り替える ImageView
     private lateinit var imageTogglePasswordRegister: ImageView
-    // 「すでにアカウントをお持ちですか？ ログインはこちら」
+    // 「すでにアカウントをお持ちですか？ ログインはこちら」のテキスト
     private lateinit var textGotoLogin: TextView
 
-    // パスワード表示/非表示フラグ
     private var isPasswordVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,10 +45,10 @@ class RegisterActivity : AppCompatActivity() {
         imageTogglePasswordRegister = findViewById(R.id.imageTogglePasswordRegister)
         textGotoLogin = findViewById(R.id.textGotoLogin)
 
-        // 「すでにアカウントをお持ちですか？ ログインはこちら」の部分を設定
+        // 「すでにアカウントをお持ちですか？ ログインはこちら」の設定
         setupGotoLoginText()
 
-        // パスワード表示/非表示のアイコンをタップで切り替え
+        // パスワード表示/非表示のアイコンタップで切り替え
         imageTogglePasswordRegister.setOnClickListener {
             togglePasswordVisibility()
         }
@@ -67,7 +66,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    // 「すでにアカウントをお持ちですか？  ログインはこちら」の装飾・クリック設定
+    // 「すでにアカウントをお持ちですか？ ログインはこちら」の装飾とクリック設定
     private fun setupGotoLoginText() {
         val fullText = "すでにアカウントをお持ちですか？　 ログインはこちら"
         val spannable = SpannableStringBuilder(fullText)
@@ -78,12 +77,7 @@ class RegisterActivity : AppCompatActivity() {
 
         if (startIndex != -1) {
             // 下線を付与
-            spannable.setSpan(
-                UnderlineSpan(),
-                startIndex,
-                endIndex,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            spannable.setSpan(UnderlineSpan(), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             // クリックイベントを付与
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
@@ -93,27 +87,20 @@ class RegisterActivity : AppCompatActivity() {
                     finish()
                 }
             }
-            spannable.setSpan(
-                clickableSpan,
-                startIndex,
-                endIndex,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            spannable.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         textGotoLogin.text = spannable
         textGotoLogin.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    // パスワードの表示/非表示を切り替え
+    // パスワードの表示/非表示切替
     private fun togglePasswordVisibility() {
         if (isPasswordVisible) {
-            // 非表示
             editregisterPassword.transformationMethod = PasswordTransformationMethod.getInstance()
             imageTogglePasswordRegister.setImageResource(R.drawable.eye_closed)
             isPasswordVisible = false
         } else {
-            // 表示
             editregisterPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
             imageTogglePasswordRegister.setImageResource(R.drawable.eye_open)
             isPasswordVisible = true
@@ -123,18 +110,19 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     /**
-     * ユーザー登録（Firebase Authentication）に成功した後、
-     * Firestore の "users" コレクションにユーザー情報を追加する処理
+     * ユーザー登録に成功した後、Firestore の "users" コレクションに以下のフィールドでユーザー情報を追加する:
+     *   - "name": ユーザー名
+     *   - "email": メールアドレス
+     *   - "stamps": 空の配列 (後からQRコードスキャンでスタンプを追加する)
      */
     private fun registerUser(email: String, password: String, name: String) {
         val auth = Firebase.auth
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // ユーザー登録成功時
                     val user = auth.currentUser
 
-                    // 表示名（名前）の設定（任意）
+                    // 表示名を設定（任意）
                     val profileUpdates = UserProfileChangeRequest.Builder()
                         .setDisplayName(name)
                         .build()
@@ -148,13 +136,13 @@ class RegisterActivity : AppCompatActivity() {
                         val userData = mapOf(
                             "name" to name,
                             "email" to email,
-                            "createdAt" to com.google.firebase.Timestamp.now()
+                            "stamps" to emptyList<String>() // QRコードで取得したスタンプを後から追加するため空の配列
                         )
                         db.collection("users")
                             .document(uid)
                             .set(userData)
                             .addOnSuccessListener {
-                                // Firestore 書き込み成功後にホーム画面へ遷移
+                                // 登録完了後にホーム画面へ遷移
                                 startActivity(Intent(this, MainActivity::class.java))
                                 finish()
                             }
@@ -162,7 +150,7 @@ class RegisterActivity : AppCompatActivity() {
                                 Toast.makeText(this, "Firestore書き込み失敗: ${e.message}", Toast.LENGTH_SHORT).show()
                             }
                     } ?: run {
-                        // 万が一 user が null の場合はそのまま遷移
+                        // user が null の場合はそのままホーム画面へ
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }

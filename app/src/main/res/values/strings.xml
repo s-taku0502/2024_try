@@ -19,6 +19,8 @@
     <string name="menu_coupons">coupons</string>
     <string name="menu_contact">Contact</string>>
 
+    <string name="menu_mypage">マイページ</string>
+
     <string name="store_lst_desc">店舗情報</string>
 
     <string name="password_toggle">パスワード表示・非表示を切り替え</string>

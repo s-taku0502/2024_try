@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemNewsRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/textNewsEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2025-03-30"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textNewsContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="お知らせ内容"
+        android:textSize="16sp"
+        android:paddingBottom="4dp" />
+
+    <Button
+        android:id="@+id/buttonRead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="既読にする"/>
+</LinearLayout>

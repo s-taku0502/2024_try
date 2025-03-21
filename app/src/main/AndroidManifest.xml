@@ -84,7 +84,7 @@
         <!-- ▲▲ 追加ここまで ▲▲ -->
 
         <activity android:name=".ui.auth.PasswordResetActivity" />
-
+        <activity android:name=".ui.news.NewsActivity" />
     </application>
 
 </manifest>
