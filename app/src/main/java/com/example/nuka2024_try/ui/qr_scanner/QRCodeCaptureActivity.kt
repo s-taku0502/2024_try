@@ -18,7 +18,7 @@ class QRCodeCaptureActivity : AppCompatActivity() {
 
     private val qrCodeLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val intentData: Intent? = result.data
+            val intentData = result.data
             val qrResult: IntentResult? = IntentIntegrator.parseActivityResult(
                 result.resultCode,
                 intentData
@@ -26,12 +26,12 @@ class QRCodeCaptureActivity : AppCompatActivity() {
             if (qrResult != null && qrResult.contents != null) {
                 val scannedCode = qrResult.contents
                 Log.d("QRCodeCaptureActivity", "読み取ったQRコード: $scannedCode")
-                // stamps コレクションに存在するか確認し、存在すれば currentStamps に追加
+                // stamps コレクションに存在するか確認し、有効なら currentStamps に追加
                 validateAndSaveStamp(scannedCode)
             } else {
                 Toast.makeText(this, "QRコードが検出されませんでした", Toast.LENGTH_SHORT).show()
+                finish()
             }
-            finish() // スキャナ画面を閉じる
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,18 +48,19 @@ class QRCodeCaptureActivity : AppCompatActivity() {
     }
 
     /**
-     * stamps/{scannedCode} が存在するか確認し、存在する場合のみ
-     * currentStamps/{email} のドキュメントにスタンプを追加する
+     * stamps/{scannedCode} が存在するか確認し、有効なら currentStamps/{email} に { scannedCode: true } を保存
      */
     private fun validateAndSaveStamp(scannedCode: String) {
         val user = Firebase.auth.currentUser
         if (user == null) {
             Toast.makeText(this, "ログインしていません", Toast.LENGTH_SHORT).show()
+            finish()
             return
         }
         val email = user.email
         if (email.isNullOrEmpty()) {
             Toast.makeText(this, "ユーザーのメールアドレスが取得できません", Toast.LENGTH_SHORT).show()
+            finish()
             return
         }
 
@@ -71,29 +72,60 @@ class QRCodeCaptureActivity : AppCompatActivity() {
                 if (!stampDoc.exists()) {
                     // stamps コレクションに無い → 無効なQRコード
                     Toast.makeText(this, "無効なQRコードです: $scannedCode", Toast.LENGTH_SHORT).show()
-                    return@addOnSuccessListener
+                    finish()
+                } else {
+                    // stamps/{scannedCode} が存在する → currentStamps に追加
+                    saveToCurrentStamps(email, scannedCode)
                 }
-                // stamps/{scannedCode} が存在する → currentStamps に追加
-                saveToCurrentStamps(email, scannedCode)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "スタンプ情報の確認に失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+                finish()
             }
     }
 
     /**
-     * currentStamps/{email} ドキュメントに、stampCode を { stampCode: true } として追加 (merge)
+     * currentStamps/{email} ドキュメントに { scannedCode: true } を追加 (merge)
+     * すでに同じスタンプが登録されている場合は「取得済み」とする
      */
-    private fun saveToCurrentStamps(email: String, stampCode: String) {
+    private fun saveToCurrentStamps(email: String, scannedCode: String) {
         val db = Firebase.firestore
         val docRef = db.collection("currentStamps").document(email)
-        val data = mapOf(stampCode to true)
-        docRef.set(data, SetOptions.merge())
-            .addOnSuccessListener {
-                Toast.makeText(this, "スタンプを追加しました: $stampCode", Toast.LENGTH_SHORT).show()
+
+        docRef.get().addOnSuccessListener { snap ->
+            if (snap.exists()) {
+                val dataMap = snap.data ?: emptyMap<String, Any>()
+                if (dataMap[scannedCode] == true) {
+                    // 二度目のスキャン
+                    Toast.makeText(this, "このスタンプは既に取得済みです", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    // 新規追加
+                    docRef.set(mapOf(scannedCode to true), SetOptions.merge())
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "スタンプを追加しました: $scannedCode", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "スタンプ追加失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                }
+            } else {
+                // ドキュメントが存在しない → 新規作成
+                docRef.set(mapOf(scannedCode to true))
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "新しいスタンプを追加しました: $scannedCode", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "スタンプ追加失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "スタンプ追加失敗: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }.addOnFailureListener { e ->
+            Toast.makeText(this, "スタンプ情報の確認に失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+            finish()
+        }
     }
 }

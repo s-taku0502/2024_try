@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_mypage"
+        android:title="TODO"
         app:actionLayout="@layout/menu_mypage_button"
-        app:showAsAction="always|withText" />
-
+        app:showAsAction="always" />
 </menu>

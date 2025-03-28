@@ -31,6 +31,12 @@ class RegisterActivity : AppCompatActivity() {
     // 「すでにアカウントをお持ちですか？ ログインはこちら」のテキスト
     private lateinit var textGotoLogin: TextView
 
+    // 新たに追加
+    private lateinit var editAge: EditText
+    private lateinit var radioGroupGender: RadioGroup
+    private lateinit var radioMale: RadioButton
+    private lateinit var radioFemale: RadioButton
+
     private var isPasswordVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +51,12 @@ class RegisterActivity : AppCompatActivity() {
         imageTogglePasswordRegister = findViewById(R.id.imageTogglePasswordRegister)
         textGotoLogin = findViewById(R.id.textGotoLogin)
 
+        // 追加したUI要素
+        editAge = findViewById(R.id.editAge)
+        radioGroupGender = findViewById(R.id.radioGroupGender)
+        radioMale = findViewById(R.id.radioMale)
+        radioFemale = findViewById(R.id.radioFemale)
+
         // 「すでにアカウントをお持ちですか？ ログインはこちら」の設定
         setupGotoLoginText()
 
@@ -53,13 +65,29 @@ class RegisterActivity : AppCompatActivity() {
             togglePasswordVisibility()
         }
 
+        // 新規登録ボタン
         buttonRegister.setOnClickListener {
             val email = editregisterEmail.text.toString().trim()
             val password = editregisterPassword.text.toString().trim()
             val name = editregisterName.text.toString().trim()
 
+            // 年齢（数値に変換）
+            val ageStr = editAge.text.toString().trim()
+            val age = if (ageStr.isNotEmpty()) {
+                ageStr.toInt()
+            } else {
+                0
+            }
+
+            // 性別
+            val gender = when (radioGroupGender.checkedRadioButtonId) {
+                R.id.radioMale -> "男性"
+                R.id.radioFemale -> "女性"
+                else -> "その他"
+            }
+
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                registerUser(email, password, name)
+                registerUser(email, password, name, age, gender)
             } else {
                 Toast.makeText(this, "メールアドレスとパスワードを入力してください", Toast.LENGTH_SHORT).show()
             }
@@ -113,9 +141,11 @@ class RegisterActivity : AppCompatActivity() {
      * ユーザー登録に成功した後、Firestore の "users" コレクションに以下のフィールドでユーザー情報を追加する:
      *   - "name": ユーザー名
      *   - "email": メールアドレス
-     *   - "stamps": 空の配列 (後からQRコードスキャンでスタンプを追加する)
+     *   - "stamps": 空の配列
+     *   - "age": 年齢（数値）
+     *   - "gender": 性別（文字列: "male", "female", など）
      */
-    private fun registerUser(email: String, password: String, name: String) {
+    private fun registerUser(email: String, password: String, name: String, age: Int, gender: String) {
         val auth = Firebase.auth
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -136,7 +166,8 @@ class RegisterActivity : AppCompatActivity() {
                         val userData = mapOf(
                             "name" to name,
                             "email" to email,
-                            "stamps" to emptyList<String>() // QRコードで取得したスタンプを後から追加するため空の配列
+                            "age" to age,
+                            "gender" to gender
                         )
                         db.collection("users")
                             .document(uid)

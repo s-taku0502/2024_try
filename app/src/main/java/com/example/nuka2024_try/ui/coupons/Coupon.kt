@@ -8,6 +8,5 @@ data class Coupon(
     val title: String = "",           // クーポンのタイトル
     val discount: String = "",        // 割引内容
     val limit: Date? = null,          // 有効期限
-    val requiredStamps: Long = 0,     // 獲得に必要なスタンプ数
     var isUsed: Boolean = false       // 使用済みかどうか
 )

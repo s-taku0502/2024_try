@@ -313,15 +313,6 @@ class StoreFragment : Fragment() {
                 R.drawable.takagi
             ),
             Store(
-                "高木歯科医院",
-                "高木歯科医院の詳細情報",
-                "医療業",
-                "確かな技術と思いやりあふれる姿勢に信頼",
-                "金沢市額谷3-105",
-                URL("https://nukashinkoukai.com/shop/419/"),
-                R.drawable.takagi
-            ),
-            Store(
                 "たこやき太郎",
                 "たこやき太郎の詳細情報",
                 "飲食業",

@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.nuka2024_try.databinding.FragmentHomeBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -21,6 +20,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,62 +42,69 @@ class HomeFragment : Fragment() {
         binding.textHome.text = spannable
         binding.textHome.setTextColor(Color.BLACK)
 
-        // --- Firestoreから「news」コレクションのデータを取得 ---
-        val newsContainer = binding.newsContainer
-        val db = Firebase.firestore
-
-        db.collection("news")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    // Firebase上のフィールド名に合わせて取得
-                    val endData = document.getString("endDate") ?: ""
-                    val content = document.getString("content") ?: ""
-
-                    // お知らせ1件のレイアウト
-                    val itemLayout = LinearLayout(requireContext()).apply {
-                        orientation = LinearLayout.VERTICAL
-                        setPadding(16, 16, 16, 16)
-                    }
-
-                    // 1. 日付のTextView（太字にするとより分かりやすい）
-                    val dateTextView = TextView(requireContext()).apply {
-                        text = endData
-                        textSize = 16f
-                        setTypeface(typeface, Typeface.BOLD) // 太字
-                        setTextColor(Color.BLACK)
-                    }
-
-                    // 2. お知らせ内容のTextView
-                    val contentTextView = TextView(requireContext()).apply {
-                        text = content
-                        textSize = 14f
-                        setTextColor(Color.DKGRAY)
-                    }
-
-                    // レイアウトに追加
-                    itemLayout.addView(dateTextView)
-                    itemLayout.addView(contentTextView)
-
-                    // 3. 区切り線（divider）を追加して見やすく
-                    val dividerView = View(requireContext()).apply {
-                        layoutParams = LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            2 // 高さ2px
-                        )
-                        setBackgroundColor(Color.LTGRAY)
-                    }
-
-                    // お知らせレイアウトを newsContainer に追加
-                    newsContainer.addView(itemLayout)
-                    newsContainer.addView(dividerView)
-                }
-            }
-            .addOnFailureListener { e ->
-                e.printStackTrace()
-            }
+        // --- Firestoreから「news」コレクションのデータをリアルタイムで取得 ---
+        observeNewsCollection()
 
         return root
+    }
+
+    /**
+     * 「news」コレクションをリアルタイム監視し、Home画面の「お知らせ」に反映
+     */
+    private fun observeNewsCollection() {
+        db.collection("news")
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    e.printStackTrace()
+                    return@addSnapshotListener
+                }
+                val newsContainer = binding.newsContainer
+                newsContainer.removeAllViews() // 一旦クリア
+
+                if (snapshot != null) {
+                    for (document in snapshot.documents) {
+                        val endData = document.getString("endDate") ?: ""
+                        val content = document.getString("content") ?: ""
+
+                        // お知らせ1件のレイアウト
+                        val itemLayout = LinearLayout(requireContext()).apply {
+                            orientation = LinearLayout.VERTICAL
+                            setPadding(16, 16, 16, 16)
+                        }
+
+                        // 1. 日付のTextView（太字）
+                        val dateTextView = TextView(requireContext()).apply {
+                            text = endData
+                            textSize = 16f
+                            setTypeface(typeface, Typeface.BOLD)
+                            setTextColor(Color.BLACK)
+                        }
+
+                        // 2. お知らせ内容のTextView
+                        val contentTextView = TextView(requireContext()).apply {
+                            text = content
+                            textSize = 14f
+                            setTextColor(Color.DKGRAY)
+                        }
+
+                        // レイアウトに追加
+                        itemLayout.addView(dateTextView)
+                        itemLayout.addView(contentTextView)
+
+                        // 区切り線（divider）
+                        val dividerView = View(requireContext()).apply {
+                            layoutParams = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                2 // 高さ2px
+                            )
+                            setBackgroundColor(Color.LTGRAY)
+                        }
+
+                        newsContainer.addView(itemLayout)
+                        newsContainer.addView(dividerView)
+                    }
+                }
+            }
     }
 
     override fun onDestroyView() {
