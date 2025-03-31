@@ -5,6 +5,7 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_home">
 
+    <!-- 既存のフラグメント定義 -->
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.nuka2024_try.ui.home.HomeFragment"
@@ -20,7 +21,7 @@
     <fragment
         android:id="@+id/nav_stamps"
         android:name="com.example.nuka2024_try.ui.stamps.StampsFragment"
-        android:label="Stamps"
+        android:label="@string/menu_stamps"
         tools:layout="@layout/fragment_stamps" />
 
     <fragment
@@ -32,44 +33,26 @@
     <fragment
         android:id="@+id/nav_coupons"
         android:name="com.example.nuka2024_try.ui.coupons.CouponsFragment"
-        android:label="Coupons"
+        android:label="@string/menu_coupons"
         tools:layout="@layout/fragment_coupons" />
 
     <fragment
         android:id="@+id/nav_stores"
         android:name="com.example.nuka2024_try.ui.stores.StoreFragment"
-        android:label="Stores"
+        android:label="@string/menu_stores"
         tools:layout="@layout/fragment_stores" />
 
     <fragment
         android:id="@+id/nav_contact"
         android:name="com.example.nuka2024_try.ui.contact.ContactFragment"
-        android:label="お問い合わせフォーム"
+        android:label="@string/menu_contact"
         tools:layout="@layout/fragment_contact" />
 
+    <!-- お知らせ一覧フラグメント -->
     <fragment
-        android:id="@+id/nav_Email"
-        android:name="com.example.nuka2024_try.ui.qr_scanner.ScannersFragment"
-        android:label="Setting"
-        tools:layout="@layout/activity_mailsetting" />
-
-    <fragment
-        android:id="@+id/nav_setting"
-        android:name="com.example.nuka2024_try.ui.qr_scanner.ScannersFragment"
-        android:label="Setting"
-        tools:layout="@layout/activity_setting" />
+        android:id="@+id/nav_news"
+        android:name="com.example.nuka2024_try.ui.news.NewsFragment"
+        android:label="@string/title_news"
+        tools:layout="@layout/fragment_news" />
 
 </navigation>
-
-    <!--
-        <fragment
-            android:id="@+id/nav_gallery"
-            android:name="com.example.nuka2024_try.ui.gallery.GalleryFragment"
-            android:label="@string/menu_gallery"
-            tools:layout="@layout/fragment_gallery" />
-
-        <fragment
-            android:id="@+id/nav_slideshow"
-            android:name="com.example.nuka2024_try.ui.slideshow.SlideshowFragment"
-            android:label="@string/menu_slideshow"
-            tools:layout="@layout/fragment_slideshow" /> -->

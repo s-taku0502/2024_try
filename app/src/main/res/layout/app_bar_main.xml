@@ -17,45 +17,41 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.Nuka2024_try.PopupOverlay" />
+            app:popupTheme="@style/Theme.Nuka2024_try.PopupOverlay">
+
+            <!-- 右側に、メールアイコン＋未読バッジを配置するためのコンテナ -->
+            <FrameLayout
+                android:id="@+id/mailContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/iconMail"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_mail"
+                    android:contentDescription="@string/mail_icon" />
+
+                <TextView
+                    android:id="@+id/textUnreadCount"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        layout="@layout/content_main" />
-
-    <!-- FrameLayoutでアイコンとバッジを重ねる -->
-    <FrameLayout
-        android:id="@+id/mailContainer"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp">
-
-        <!-- メールアイコンを大きく表示 -->
-        <ImageView
-            android:id="@+id/iconMail"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_mail"/>
-
-        <!-- バッジ(未読件数)を表示するTextView -->
-        <TextView
-            android:id="@+id/textUnreadCount"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="top|end"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="0dp"
-            android:background="@drawable/badge_background"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            android:visibility="gone" />
-    </FrameLayout>
+    <include layout="@layout/content_main" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
