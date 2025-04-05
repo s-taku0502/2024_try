@@ -1,17 +1,20 @@
 package com.example.nuka2024_try.ui.home
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
+import com.example.nuka2024_try.R
 import com.example.nuka2024_try.databinding.FragmentHomeBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -29,8 +32,17 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupBannerText()
+        observeNewsCollection()
+    }
+
+    private fun setupBannerText() {
+        if (_binding == null) return
         // --- 上部バナー部分のテキスト設定 ---
         val bannerText = "額地区スタンプらり～\nスタンプらり～を活用して、商店街を周ろう！"
         val spannable = SpannableString(bannerText)
@@ -40,12 +52,7 @@ class HomeFragment : Fragment() {
         spannable.setSpan(AbsoluteSizeSpan(18, true), 24, 32, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         binding.textHome.text = spannable
-        binding.textHome.setTextColor(Color.BLACK)
-
-        // --- Firestoreから「news」コレクションのデータをリアルタイムで取得 ---
-        observeNewsCollection()
-
-        return root
+        binding.textHome.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
     }
 
     /**
@@ -55,9 +62,12 @@ class HomeFragment : Fragment() {
         db.collection("news")
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
-                    e.printStackTrace()
+                    Log.w("HomeFragment", "Listen failed.", e)
                     return@addSnapshotListener
                 }
+
+                if (_binding == null) return@addSnapshotListener
+
                 val newsContainer = binding.newsContainer
                 newsContainer.removeAllViews() // 一旦クリア
 
@@ -69,7 +79,7 @@ class HomeFragment : Fragment() {
                         // お知らせ1件のレイアウト
                         val itemLayout = LinearLayout(requireContext()).apply {
                             orientation = LinearLayout.VERTICAL
-                            setPadding(16, 16, 16, 16)
+                            setPadding(resources.getDimensionPixelSize(R.dimen.default_padding))
                         }
 
                         // 1. 日付のTextView（太字）
@@ -77,14 +87,14 @@ class HomeFragment : Fragment() {
                             text = endData
                             textSize = 16f
                             setTypeface(typeface, Typeface.BOLD)
-                            setTextColor(Color.BLACK)
+                            setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                         }
 
                         // 2. お知らせ内容のTextView
                         val contentTextView = TextView(requireContext()).apply {
                             text = content
                             textSize = 14f
-                            setTextColor(Color.DKGRAY)
+                            setTextColor(ContextCompat.getColor(requireContext(), R.color.dark_gray))
                         }
 
                         // レイアウトに追加
@@ -95,9 +105,9 @@ class HomeFragment : Fragment() {
                         val dividerView = View(requireContext()).apply {
                             layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT,
-                                2 // 高さ2px
+                                resources.getDimensionPixelSize(R.dimen.divider_height) // 高さ2px
                             )
-                            setBackgroundColor(Color.LTGRAY)
+                            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
                         }
 
                         newsContainer.addView(itemLayout)

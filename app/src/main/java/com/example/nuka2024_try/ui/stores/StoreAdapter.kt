@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.nuka2024_try.R
-import java.net.URL
+import com.google.firebase.storage.FirebaseStorage
 
 class StoreAdapter(private val storeList: List<Store>) :
     RecyclerView.Adapter<StoreAdapter.StoreViewHolder>() {
 
-    // 各アイテムの展開状態を保持するリスト
+    // 展開状態のリスト
     private val expandedStates = MutableList(storeList.size) { false }
 
     class StoreViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -22,16 +23,12 @@ class StoreAdapter(private val storeList: List<Store>) :
         val expandedLayout: View = view.findViewById(R.id.expandedLayout)
         val toggleButton: TextView = view.findViewById(R.id.toggleButton)
 
-        // 業界表示用
+        // 詳細表示
         val industryTextView: TextView = view.findViewById(R.id.storeIndustries)
-
-        // 会社の特徴表示用
         val featuresTextView: TextView = view.findViewById(R.id.storeFeatures)
-
         val addressTextView: TextView = view.findViewById(R.id.storeAddress)
         val websiteTextView: TextView = view.findViewById(R.id.storeWebsite)
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoreViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -42,24 +39,43 @@ class StoreAdapter(private val storeList: List<Store>) :
     override fun onBindViewHolder(holder: StoreViewHolder, position: Int) {
         val store = storeList[position]
 
-        // 基本情報のセット
+        // 基本情報
         holder.nameTextView.text = store.name
         holder.descriptionTextView.text = store.description
-        holder.storeImageView.setImageResource(store.imageResId)
         holder.industryTextView.text = "業種: ${store.industry}"
         holder.featuresTextView.text = "会社の特徴: ${store.company_features}"
         holder.addressTextView.text = "住所: ${store.address}"
         holder.websiteTextView.text = "ホームページ: ${store.website_url}"
+
+        // 画像の読み込み
+        if (store.imageUrl.startsWith("gs://")) {
+            // 「gs://」で始まる場合は Storage のパスなので、ダウンロードURLを取得してから Glide に渡す
+            val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(store.imageUrl)
+            storageRef.downloadUrl
+                .addOnSuccessListener { uri ->
+                    Glide.with(holder.itemView.context)
+                        .load(uri)
+                        .into(holder.storeImageView)
+                }
+                .addOnFailureListener {
+                    // エラー時の処理（必要に応じてデフォルト画像を表示など）
+                    holder.storeImageView.setImageResource(R.drawable.ic_launcher_background)
+                }
+        } else {
+            // 既に "https://" のようなダウンロードURLが Firestore に入っている場合はこちら
+            Glide.with(holder.itemView.context)
+                .load(store.imageUrl)
+                .into(holder.storeImageView)
+        }
 
         // 展開状態の管理
         val isExpanded = expandedStates[position]
         holder.expandedLayout.visibility = if (isExpanded) View.VISIBLE else View.GONE
         holder.toggleButton.text = if (isExpanded) "閉じる" else "詳細を見る"
 
-        // タップ時の挙動
         holder.toggleButton.setOnClickListener {
-            expandedStates[position] = !isExpanded // 状態を反転
-            notifyItemChanged(position) // 該当アイテムを更新
+            expandedStates[position] = !isExpanded
+            notifyItemChanged(position)
         }
     }
 
