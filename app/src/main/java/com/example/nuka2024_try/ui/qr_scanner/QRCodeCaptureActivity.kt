@@ -41,7 +41,7 @@ class QRCodeCaptureActivity : AppCompatActivity() {
         IntentIntegrator(this).apply {
             setCaptureActivity(PortraitCaptureActivity::class.java) // 縦画面固定用Activity
             setOrientationLocked(true)
-            setPrompt("QRコードを読み取ってみよう！")
+
         }.also { integrator ->
             qrCodeLauncher.launch(integrator.createScanIntent())
         }

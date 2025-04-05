@@ -23,8 +23,10 @@ class PortraitCaptureActivity : CaptureActivity() {
         // カスタムレイアウトを設定
         setContentView(R.layout.custom_capture_layout)
 
-        // レイアウトからBarcodeViewを取得
+        // レイアウトから BarcodeView を取得
         val barcodeView = findViewById<DecoratedBarcodeView>(R.id.zxing_barcode_scanner)
+        // デフォルトのステータス表示を空文字にして非表示にする
+        barcodeView.setStatusText("")
 
         // 「Homeへ移動」ボタンを押したらHome画面に遷移する
         val buttonHome = findViewById<Button>(R.id.button_home)

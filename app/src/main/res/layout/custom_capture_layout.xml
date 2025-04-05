@@ -1,19 +1,52 @@
-<!-- res/layout/custom_capture_layout.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:zxing_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
+    <!-- カメラ映像＆スキャンラインを表示する領域 -->
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/zxing_barcode_scanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- タイトル文言 (少し下げて強調表示) -->
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QRコードを読み取ってみよう！"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true" />
+
+    <!-- スキャン枠とHOMEボタンの間に表示する説明文言 -->
+    <TextView
+        android:id="@+id/textInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QRコードを画面の読み取り範囲内に写すとスキャンします。"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/button_home"
+        android:layout_marginBottom="20dp" />
+
+    <!-- 画面下部に配置するHOMEボタン -->
     <Button
         android:id="@+id/button_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Homeへ移動"
+        android:text="ホーム画面へ移動する"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp" />

@@ -39,7 +39,7 @@ class StoreAdapter(private val storeList: List<Store>) :
     override fun onBindViewHolder(holder: StoreViewHolder, position: Int) {
         val store = storeList[position]
 
-        // 基本情報
+        // 基本情報の設定
         holder.nameTextView.text = store.name
         holder.descriptionTextView.text = store.description
         holder.industryTextView.text = "業種: ${store.industry}"
@@ -47,24 +47,28 @@ class StoreAdapter(private val storeList: List<Store>) :
         holder.addressTextView.text = "住所: ${store.address}"
         holder.websiteTextView.text = "ホームページ: ${store.website_url}"
 
-        // 画像の読み込み
+        // まずは必ず白い背景（プレースホルダー）をセットして、前の画像が残らないようにする
+        holder.storeImageView.setImageResource(R.drawable.white_placeholder)
+
+        // 画像の読み込み（placeholder と error に白い画像を指定）
         if (store.imageUrl.startsWith("gs://")) {
-            // 「gs://」で始まる場合は Storage のパスなので、ダウンロードURLを取得してから Glide に渡す
             val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(store.imageUrl)
             storageRef.downloadUrl
                 .addOnSuccessListener { uri ->
                     Glide.with(holder.itemView.context)
                         .load(uri)
+                        .placeholder(R.drawable.white_placeholder)
+                        .error(R.drawable.white_placeholder)
                         .into(holder.storeImageView)
                 }
                 .addOnFailureListener {
-                    // エラー時の処理（必要に応じてデフォルト画像を表示など）
-                    holder.storeImageView.setImageResource(R.drawable.ic_launcher_background)
+                    holder.storeImageView.setImageResource(R.drawable.white_placeholder)
                 }
         } else {
-            // 既に "https://" のようなダウンロードURLが Firestore に入っている場合はこちら
             Glide.with(holder.itemView.context)
                 .load(store.imageUrl)
+                .placeholder(R.drawable.white_placeholder)
+                .error(R.drawable.white_placeholder)
                 .into(holder.storeImageView)
         }
 
