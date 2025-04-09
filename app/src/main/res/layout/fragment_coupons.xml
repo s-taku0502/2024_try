@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nestedScrollViewCoupons"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.coupons.CouponsFragment">
 
-    <!-- クーポン一覧を表示する RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewCoupons"
+    <!-- 画面全体のコンテンツを縦に並べる -->
+    <LinearLayout
+        android:id="@+id/linearLayoutCoupons"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_coupon" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- タイトル部：クーポン一覧（スクロール対象に含まれる） -->
+        <LinearLayout
+            android:id="@+id/layout_coupons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textCouponTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="クーポン一覧"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- クーポン一覧表示（RecyclerView） -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCoupons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_coupon" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

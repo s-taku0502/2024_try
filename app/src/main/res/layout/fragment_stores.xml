@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.stores.StoreFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/storeRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:clipToPadding="false"
-        android:contentDescription="店舗情報"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- タイトル部分：店舗一覧。スクロールに合わせて一緒に上へ流れる -->
+        <TextView
+            android:id="@+id/textStoreTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="店舗一覧"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:gravity="center" />
+
+        <!-- 店舗情報一覧を表示する RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/storeRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:contentDescription="店舗情報" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

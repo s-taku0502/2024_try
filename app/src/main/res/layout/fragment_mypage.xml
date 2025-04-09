@@ -7,7 +7,18 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- 現在のユーザー名を表示するテキスト -->
+    <!-- 「マイページ」というタイトルを中央に配置 -->
+    <TextView
+        android:id="@+id/textMyPageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="マイページ"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <!-- 以下、残りの内容は変更せず -->
     <TextView
         android:id="@+id/textCurrentUserName"
         android:layout_width="wrap_content"
@@ -16,7 +27,6 @@
         android:textSize="18sp"
         android:paddingBottom="8dp"/>
 
-    <!-- 現在のメールアドレスを表示するテキスト -->
     <TextView
         android:id="@+id/textEmailAddress"
         android:layout_width="wrap_content"
@@ -25,7 +35,6 @@
         android:textSize="16sp"
         android:paddingBottom="16dp"/>
 
-    <!-- 新しいユーザー名を入力するためのEditText -->
     <EditText
         android:id="@+id/editNewUserName"
         android:layout_width="match_parent"
@@ -33,7 +42,6 @@
         android:hint="新しいユーザー名を入力"
         android:layout_marginBottom="16dp"/>
 
-    <!-- ユーザー名を変更するボタン -->
     <Button
         android:id="@+id/buttonChangeUserName"
         android:layout_width="wrap_content"
@@ -41,7 +49,6 @@
         android:text="ユーザー名を変更"
         android:layout_marginBottom="16dp"/>
 
-    <!-- ログアウトボタン -->
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="wrap_content"
@@ -49,7 +56,6 @@
         android:text="ログアウト"
         android:layout_marginBottom="16dp"/>
 
-    <!-- アカウント削除ボタン -->
     <Button
         android:id="@+id/buttonDeleteAccount"
         android:layout_width="wrap_content"

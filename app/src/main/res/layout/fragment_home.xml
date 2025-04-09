@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <!-- 1. 上部バナー領域 -->
+    <!-- 1. 上部バナー領域（紫色バー） -->
     <LinearLayout
         android:id="@+id/bannerContainer"
         android:layout_width="0dp"
@@ -21,7 +21,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- バナーテキスト -->
+        <!-- バナー内のテキスト（例：ホームのタイトル） -->
+        <TextView
+            android:id="@+id/textHomeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ホーム"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="start"
+            android:padding="16dp" />
+
         <TextView
             android:id="@+id/textHome"
             android:layout_width="wrap_content"
@@ -32,37 +42,44 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- 2. 「お知らせ」タイトル -->
-    <TextView
-        android:id="@+id/noticeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="お知らせ"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/bannerContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- 3. お知らせ一覧をスクロール可能にする -->
+    <!-- 2. 下部のスクロール可能なコンテンツ領域 -->
     <ScrollView
         android:id="@+id/scrollViewNews"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/noticeTitle"
+        app:layout_constraintTop_toBottomOf="@id/bannerContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- スクロール対象の LinearLayout -->
         <LinearLayout
-            android:id="@+id/newsContainer"
+            android:id="@+id/scrollableContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp" />
+            android:paddingEnd="16dp">
+
+            <!-- 「お知らせ」タイトルをここに配置して、スクロールとともに動く -->
+            <TextView
+                android:id="@+id/noticeTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="お知らせ"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Firestore から取得したお知らせを追加するコンテナ -->
+            <LinearLayout
+                android:id="@+id/newsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
