@@ -1,0 +1,15 @@
+<resources>
+    <!-- ダークモード用に文字色を調整 -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <!-- ダークモードでは背景が暗いので、テキストは明るい色に変更 -->
+    <color name="black">#FF000000</color> <!-- この色はダークモードではあまり使用しない -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="color_navy">#000080</color>
+    <!-- 例として、ダークモードでは dark_gray をより明るいグレーに変更 -->
+    <color name="dark_gray">#FFCCCCCC</color>
+    <color name="light_gray">#FF666666</color>
+</resources>

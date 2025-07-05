@@ -44,16 +44,11 @@ class HomeFragment : Fragment() {
 
     private fun setupBannerText() {
         if (_binding == null) return
-        // --- 上部バナー部分のテキスト設定 ---
-        val bannerText = "額地区スタンプらり～\nスタンプらり～を活用して、商店街を周ろう！"
-        val spannable = SpannableString(bannerText)
-        // 「スタンプらり～」部分を20spに設定 (indices 0～10)
-        spannable.setSpan(AbsoluteSizeSpan(20, true), 0, 10, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        // 「商店街を周ろう！」部分を18spに設定 (indices 24～32)
-        spannable.setSpan(AbsoluteSizeSpan(18, true), 24, 32, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        binding.textHome.text = spannable
-        binding.textHome.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        binding.textBannerHome.text = "ホーム"
+        binding.textLine1.text = "額地区スタンプらり～"
+        binding.textLine2.text = "スタンプらり～を活用して、商店街を周ろう！"
     }
+
 
     /**
      * Firestore の "news" コレクションをリアルタイム監視し、Home画面のお知らせに反映する

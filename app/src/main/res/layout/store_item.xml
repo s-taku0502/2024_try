@@ -9,6 +9,7 @@
         android:id="@+id/store_image"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:scaleType="centerCrop" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
 </LinearLayout>

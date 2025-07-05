@@ -15,13 +15,13 @@
     <fragment
         android:id="@+id/nav_mypage"
         android:name="com.example.nuka2024_try.ui.mypage.MyPageFragment"
-        android:label="@string/menu_mypage"
+        android:label=""
         tools:layout="@layout/fragment_mypage" />
 
     <fragment
         android:id="@+id/nav_stamps"
         android:name="com.example.nuka2024_try.ui.stamps.StampsFragment"
-        android:label="@string/menu_stamps"
+        android:label=""
         tools:layout="@layout/fragment_stamps" />
 
     <fragment
@@ -33,26 +33,26 @@
     <fragment
         android:id="@+id/nav_coupons"
         android:name="com.example.nuka2024_try.ui.coupons.CouponsFragment"
-        android:label="@string/menu_coupons"
+        android:label=""
         tools:layout="@layout/fragment_coupons" />
 
     <fragment
         android:id="@+id/nav_stores"
         android:name="com.example.nuka2024_try.ui.stores.StoreFragment"
-        android:label="@string/menu_stores"
+        android:label=""
         tools:layout="@layout/fragment_stores" />
 
     <fragment
         android:id="@+id/nav_contact"
         android:name="com.example.nuka2024_try.ui.contact.ContactFragment"
-        android:label="@string/menu_contact"
+        android:label=""
         tools:layout="@layout/fragment_contact" />
 
     <!-- お知らせ一覧フラグメント -->
     <fragment
         android:id="@+id/nav_news"
         android:name="com.example.nuka2024_try.ui.news.NewsFragment"
-        android:label="@string/title_news"
+        android:label=""
         tools:layout="@layout/fragment_news" />
 
 </navigation>

@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <!-- 1. 上部バナー領域（紫色バー） -->
+    <!-- 1) 上部バナー領域 -->
     <LinearLayout
         android:id="@+id/bannerContainer"
         android:layout_width="0dp"
@@ -21,28 +21,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- バナー内のテキスト（例：ホームのタイトル） -->
+        <!-- 上段: 「額地区スタンプらり～」 (通常表示) -->
         <TextView
-            android:id="@+id/textHomeTitle"
+            android:id="@+id/textBannerHome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="ホーム"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="start"
-            android:padding="16dp" />
+            android:paddingBottom="8dp" />
+
 
         <TextView
-            android:id="@+id/textHome"
+            android:id="@+id/textLine1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="額地区スタンプらり～"
+            android:textSize="16sp"
             android:textColor="@android:color/white"
             android:gravity="center"
-            android:text="額地区スタンプらり～\nスタンプらり～を活用して、商店街を周ろう！"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:paddingBottom="8dp"/>
 
-    <!-- 2. 下部のスクロール可能なコンテンツ領域 -->
+        <!-- 下段: 「スタンプらり～を活用して、商店街を周ろう！」 (オートサイズで1行に収める) -->
+        <TextView
+            android:id="@+id/textLine2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:text="スタンプらり～を活用して、商店街を周ろう！"
+            android:textColor="@android:color/white"
+
+
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeMaxTextSize="16sp"
+            app:autoSizeStepGranularity="1sp" />
+        </LinearLayout>
+
+    <!-- 2) 下部のスクロール領域 (お知らせ) -->
     <ScrollView
         android:id="@+id/scrollViewNews"
         android:layout_width="0dp"
@@ -52,7 +71,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- スクロール対象の LinearLayout -->
         <LinearLayout
             android:id="@+id/scrollableContent"
             android:layout_width="match_parent"
@@ -61,7 +79,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp">
 
-            <!-- 「お知らせ」タイトルをここに配置して、スクロールとともに動く -->
+            <!-- 「お知らせ」タイトル (中央揃え) -->
             <TextView
                 android:id="@+id/noticeTitle"
                 android:layout_width="match_parent"
@@ -72,7 +90,7 @@
                 android:gravity="center"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Firestore から取得したお知らせを追加するコンテナ -->
+            <!-- Firestore から取得したお知らせ項目を追加するコンテナ -->
             <LinearLayout
                 android:id="@+id/newsContainer"
                 android:layout_width="match_parent"
